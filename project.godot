@@ -16,9 +16,9 @@ config/features=PackedStringArray("4.3", "GL Compatibility")
 
 [display]
 
-window/size/viewport_width=350
-window/size/viewport_height=256
-window/size/resizable=false
+window/size/viewport_width=288
+window/size/viewport_height=192
+window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
 

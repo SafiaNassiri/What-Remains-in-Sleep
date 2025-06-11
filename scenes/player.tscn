@@ -7,9 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://x25ajfihmbdu" path="res://Sprites&TileMaps/Hana Caraka - Base Character [sample]/jump.png" id="4_vpp87"]
 [ext_resource type="Texture2D" uid="uid://dwhw0g5i3bl7u" path="res://Sprites&TileMaps/Hana Caraka - Base Character [sample]/run.png" id="5_ucv2x"]
 
-[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_w1u7q"]
-radius = 5.0
-height = 16.0
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8bbud"]
+size = Vector2(10, 6)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_vrkgn"]
 atlas = ExtResource("1_lvyeq")
@@ -541,7 +540,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"jump-down",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 0.01,
@@ -564,7 +563,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"jump-side",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 0.01,
@@ -587,7 +586,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"jump-up",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -681,11 +680,12 @@ animations = [{
 script = ExtResource("1_i42pj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CapsuleShape2D_w1u7q")
+position = Vector2(-1, 3)
+shape = SubResource("RectangleShape2D_8bbud")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(-0.5, -1)
 scale = Vector2(0.9875, 1)
 sprite_frames = SubResource("SpriteFrames_pxuqu")
-animation = &"jump-up"
+animation = &"jump-side"
 autoplay = "idle-side"
