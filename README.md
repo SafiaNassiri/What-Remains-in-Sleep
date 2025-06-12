@@ -47,6 +47,7 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 - [ ] Audio feedback (ambience, item SFX, music)
 - [ ] Polished UI animations
 - [ ] Full memory log screen
+- [ ] Add timer of 5 minutes for each run and of you don't complete it you just 'die'
 
 ---
 
