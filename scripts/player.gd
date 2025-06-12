@@ -1,12 +1,21 @@
+#player.gd
+
 extends CharacterBody2D
 
 @export var speed := 150
-
+var movement_locked := false
+var ui
 var direction := Vector2.ZERO
 var last_direction := "down"
 var is_jumping := false
+var current_interactable: String = ""
 
 func _physics_process(delta):
+	if ui and ui.is_message_active:
+		velocity = Vector2.ZERO
+		play_idle_animation()
+		return
+	
 	# If jumping, skip movement input
 	if is_jumping:
 		move_and_slide()
@@ -31,7 +40,7 @@ func _physics_process(delta):
 
 	# Flip for side-facing sprites only
 	if last_direction == "side" and direction.x != 0:
-		$AnimatedSprite2D.flip_h = direction.x < 0
+		$PlayerSprite.flip_h = direction.x < 0
 
 	# Jump input
 	if not is_jumping and Input.is_action_just_pressed("jump"):
@@ -46,38 +55,44 @@ func update_facing_direction(dir: Vector2):
 # Animation controls
 func play_idle_animation():
 	var anim = "idle-" + last_direction
-	if $AnimatedSprite2D.animation != anim:
-		$AnimatedSprite2D.animation = anim
-		$AnimatedSprite2D.play()
+	if $PlayerSprite.animation != anim:
+		$PlayerSprite.animation = anim
+		$PlayerSprite.play()
 
 func play_run_animation():
 	var anim = "run-" + last_direction
-	if $AnimatedSprite2D.animation != anim:
-		$AnimatedSprite2D.animation = anim
-		$AnimatedSprite2D.play()
+	if $PlayerSprite.animation != anim:
+		$PlayerSprite.animation = anim
+		$PlayerSprite.play()
 
 func play_hurt_animation():
 	var anim = "hurt-" + last_direction
-	$AnimatedSprite2D.animation = anim
-	$AnimatedSprite2D.play()
+	$PlayerSprite.animation = anim
+	$PlayerSprite.play()
 
 func play_jump_animation():
 	var anim = "jump-" + last_direction
-	$AnimatedSprite2D.animation = anim
-	$AnimatedSprite2D.play()
+	$PlayerSprite.animation = anim
+	$PlayerSprite.play()
 
 func play_death_animation():
 	var anim = "death-" + last_direction
-	$AnimatedSprite2D.animation = anim
-	$AnimatedSprite2D.play()
+	$PlayerSprite.animation = anim
+	$PlayerSprite.play()
 
 # Jump action
 func start_jump():
 	is_jumping = true
 	var anim = "jump-" + last_direction
-	$AnimatedSprite2D.animation = anim
-	$AnimatedSprite2D.play()
+	$PlayerSprite.animation = anim
+	$PlayerSprite.play()
 
-	await $AnimatedSprite2D.animation_finished
+	await $PlayerSprite.animation_finished
 
 	is_jumping = false
+
+func _process(_delta):
+	if Input.is_action_just_pressed("interact") and current_interactable != "":
+		var node = get_parent().find_node(current_interactable, true, false)
+		if node and node.has_method("handle_interaction"):
+			node.handle_interaction(self)

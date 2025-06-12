@@ -1,0 +1,3 @@
+[gd_scene format=3 uid="uid://cwe23br4pywhu"]
+
+[node name="RoomEndTrigger" type="Node2D"]

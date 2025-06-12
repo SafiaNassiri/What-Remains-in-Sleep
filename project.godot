@@ -22,6 +22,10 @@ window/size/mode=2
 window/stretch/mode="canvas_items"
 window/stretch/scale_mode="integer"
 
+[gui]
+
+theme/custom_font="res://fonts/QuinqueFive_Font_1_15/QuinqueFive.otf"
+
 [input]
 
 move_up={
