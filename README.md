@@ -27,29 +27,6 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 - Art assets: Top-down pixel tileset from itch.io 
 - SFX / Music: 
 
-### Structure
-
-res://
-│
-├── fonts/ #Fonts used
-├── scenes/
-│ ├── main.tscn # Core game scene
-│ ├── player.tscn # Player scene
-│ ├── item.tscn # Collectible item
-│ ├── room_end_trigger.tscn #Ending trigger
-│
-├── scripts/
-│ ├── EntranceBlock.gd #Prevents player from elaving the 'house'
-│ ├── ExitBloxk.gd #Prevents player from exiting the 'house' and servers as end game trigger
-│ ├── main.gd # Game loop logic and item spawning
-│ ├── player.gd # Player movement and interaction
-│ ├── item.gd # Collectible item logic
-│ ├── interactable.gd # Handles static or triggerable object behavior
-│ ├── ui.gd #Scripts for handling dialogue box and item collection
-│
-├── Sprites&TileMaps/ # Art assets
-└── README.md
-
 ---
 
 ## Features
