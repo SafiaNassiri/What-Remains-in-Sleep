@@ -23,9 +23,9 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 ## Development
 
-Built with [Godot Engine](https://godotengine.org/)  
-Art assets: Top-down pixel tileset from itch.io 
-SFX / Music: 
+- Built with [Godot Engine](https://godotengine.org/)  
+- Art assets: Top-down pixel tileset from itch.io 
+- SFX / Music: 
 
 ### Structure
 
