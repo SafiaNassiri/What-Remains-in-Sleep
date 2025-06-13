@@ -9,6 +9,13 @@ var direction := Vector2.ZERO
 var last_direction := "down"
 var is_jumping := false
 var current_interactable: String = ""
+var interactables_in_range := []
+var stairs_node
+
+func _ready():
+	stairs_node = get_node("/root/main/Interactibles/Stairs")
+	stairs_node.connect("player_entered", Callable(self, "_on_stairs_entered"))
+	stairs_node.connect("player_exited", Callable(self, "_on_stairs_exited"))
 
 func _physics_process(delta):
 	if ui and ui.is_message_active:
@@ -91,8 +98,21 @@ func start_jump():
 
 	is_jumping = false
 
-func _process(_delta):
-	if Input.is_action_just_pressed("interact") and current_interactable != "":
-		var node = get_parent().find_node(current_interactable, true, false)
-		if node and node.has_method("handle_interaction"):
-			node.handle_interaction(self)
+func _process(delta):
+	if Input.is_action_just_pressed("ui_accept") and current_interactable != "":
+		print("Trying to interact with:", current_interactable)
+		var interactable_node = get_tree().get_current_scene().find_child(current_interactable, true, false)
+		if interactable_node and interactable_node.has_method("handle_interaction"):
+			print("Found interactable node, calling handle_interaction")
+			interactable_node.handle_interaction(self)
+		else:
+			print("Interactable node not found or missing method.")
+
+func _on_stairs_entered():
+	current_interactable = "Stairs"
+	print("Player is near stairs, can interact.")
+
+func _on_stairs_exited():
+	if current_interactable == "Stairs":
+		current_interactable = ""
+		print("Player left stairs area.")

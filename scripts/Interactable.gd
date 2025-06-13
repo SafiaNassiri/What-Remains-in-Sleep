@@ -4,7 +4,8 @@ extends Area2D
 
 @export var interactable_name: String
 @export_enum("message", "reveal_item") var interact_type := "message"
-@export var message_text: String = ""
+
+@export var can_reveal_item: bool = true
 
 var player_in_area := false
 var main_node: Node = null
@@ -12,9 +13,9 @@ var main_node: Node = null
 func _ready():
 	connect("body_entered", _on_body_entered)
 	connect("body_exited", _on_body_exited)
-	# Try to auto-find main.gd if not manually set
 	if main_node == null:
-		main_node = get_tree().root.get_node("main") 
+		main_node = get_tree().get_current_scene()
+	print("Interactable ", interactable_name, " has main_node: ", main_node)
 
 func _on_body_entered(body):
 	if body.name == "Player":
@@ -26,10 +27,15 @@ func _on_body_exited(body):
 		player_in_area = false
 		body.current_interactable = ""
 
-func handle_interaction(player):
+func handle_interaction(player) -> void:
 	match interact_type:
 		"message":
-			player.ui.show_message(message_text)
+			# Do nothing — no messages shown
+			pass
 		"reveal_item":
+			# Do not show initial message or reveal success/fail messages
+			if not can_reveal_item:
+				return
+
 			if main_node:
 				main_node.reveal_hidden_item(interactable_name)

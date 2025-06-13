@@ -5,7 +5,7 @@ extends Node2D
 @onready var player = $Player
 @onready var ui = $UI 
 @onready var item_panel_container = $UI/Panel2 
-@onready var item_display = $UI/Panel2/MarginContainer/ItemDisplay
+@onready var item_display = $UI/Panel2/CenterContainer/ItemDisplay
 @onready var collectibles = $Collectibles
 @onready var layer = $Layers
 @onready var exit_trigger = $Triggers/Exit
@@ -17,19 +17,25 @@ var current_run = 1
 var max_runs = 3
 var memory_items_collected = 0
 var collected_this_run = []
+var revealed_hidden_items := {}
+var required_items_for_ending_1 := ["image1", "bookshelf1", "pot2"]
+var collected_item_ids := []  # stores interactable_name of each collected item
+
+var max_items_per_col = 5
 
 # item data
 var item_data = {
 	1: [
 		{
-			"pos": Vector2(70, 135),
+			"interact": "image1",
+			"pos": Vector2(170, 47),
 			"text": "A cracked photograph. Someone's missing...",
 			"hidden": false,
 			"region_rect": Rect2(16, 16, 16, 16)
 		},
 		{
 			"interact": "bookshelf1",
-			"spawn_pos": Vector2(118, 101),
+			"spawn_pos": Vector2(120, 101),
 			"text": "The pages mention a hospital room.",
 			"hidden": true,
 			"region_rect": Rect2(0, 48, 16, 16)
@@ -37,22 +43,24 @@ var item_data = {
 	],
 	2: [
 		{
-			"pos": Vector2(175, 131),
+			"interact": "dogbed1",
+			"spawn_pos": Vector2(600, 100),
 			"text": "A dog toy. You remember crying.",
-			"hidden": false,
+			"hidden": true,
 			"region_rect": Rect2(0, 32, 16, 16)
 		},
 		{
-			"interact": "Pot1",
-			"spawn_pos": Vector2(180, 131),
+			"interact": "pot1",
+			"spawn_pos": Vector2(712, 102),
 			"text": "A letter half-burned: 'We’re sorry, we had to let go.'",
 			"hidden": true,
-			"region_rect": Rect2(16, 16, 16, 16)
+			"region_rect": Rect2(32, 16, 16, 16)
 		}
 	],
 	3: [
 		{
-			"pos": Vector2(190, 131),
+			"interact": "pot2",
+			"pos": Vector2(480, 62),
 			"text": "A flower pot. A small card says 'Get Well Soon!'. Your name is on it.",
 			"hidden": false,
 			"region_rect": Rect2(112, 16, 16, 16)
@@ -62,6 +70,10 @@ var item_data = {
 
 func _ready():
 	player.ui = ui
+	
+	var item_count = item_display.get_child_count()
+	var cols = max(1, int(ceil(float(item_count) / max_items_per_col)))
+	item_display.columns = cols
 		
 	print("Current run: ", current_run)
 	
@@ -99,48 +111,56 @@ func next_run():
 	player.movement_locked = false
 
 func end_game():
-	print("Waking up ...")
-	# TO DO: add wake-up scene
+	await fade_out(2)
+	await ui.show_message("You've collected all memories... You wake up.")
+	# Maybe change scene or stop player input here
+	player.movement_locked = true
+	# Optionally go to ending scene:
+	# get_tree().change_scene("res://scenes/ending_scene.tscn")
 
 func spawn_items_for_run(run):
 	var items = item_data.get(run, [])
-	print("Spawning items for run ", run, ": ", items.size())
 	for item in items:
 		if item.hidden:
 			continue
-		print("Spawning item at pos: ", item.pos)
-		spawn_item(item.pos, item.text, item.region_rect)
+		spawn_item(item.pos, item.text, item.region_rect, item.interact)
 
-func reveal_hidden_item(interact_name: String):
+func reveal_hidden_item(interact_name: String) -> bool:
+	# Prevent re-spawning
+	if revealed_hidden_items.has(interact_name):
+		return false
+
 	for item in item_data.get(current_run, []):
 		if item.hidden and item.get("interact") == interact_name:
-			spawn_item(item.spawn_pos, item.text, item.region_rect)
-			break
+			spawn_item(item.spawn_pos, item.text, item.region_rect, interact_name)
+			revealed_hidden_items[interact_name] = true
+			return true
+	return false
 
-func spawn_item(pos: Vector2, memory_text: String, sprite_region: Rect2 = Rect2()):
+func spawn_item(pos: Vector2, memory_text: String, sprite_region: Rect2 = Rect2(), interact_name: String = ""):
 	var item = ItemScene.instantiate()
 	item.global_position = pos
 	item.memory_text = memory_text
 	item.sprite_region = sprite_region
 	item.texture = tileset_texture
+	item.interactable_name = interact_name  # <== set it here
 	item.main_node = self
 	collectibles.add_child(item)
 	print("Spawned item: ", memory_text, " at ", pos)
+	return item
 
 func on_item_collected(item):
-	# Copy all data early to avoid referencing freed object
 	var texture = item.texture
 	var region = item.sprite_region
 	var memory_text = item.memory_text
+	var interact_name = item.interactable_name
 
 	memory_items_collected += 1
 	collected_this_run.append(memory_text)
+	collected_item_ids.append(interact_name)
 
-	print("Collected item: ", memory_text)
-	print("Texture: ", texture)
-	print("Region: ", region)
+	print("Collected item: ", interact_name, " - ", memory_text)
 
-	await ui.show_message(memory_text)
 	add_item_icon_to_ui(texture, region, memory_text)
 
 func add_item_icon_to_ui(texture: Texture2D, region: Rect2, memory_text: String):
@@ -162,9 +182,45 @@ func add_item_icon_to_ui(texture: Texture2D, region: Rect2, memory_text: String)
 		if not item_panel_container.visible:
 			item_panel_container.visible = true
 		item_display.add_child(icon)
+
+		var item_count = item_display.get_child_count()
+		var cols = int(ceil(float(item_count) / max_items_per_col))
+		item_display.columns = cols
+
+		reorder_items_for_column_first(item_count, max_items_per_col)
 		update_item_display_size()
 	else:
 		print("ERROR: item_display not found")
+
+func reorder_items_for_column_first(item_count: int, max_items_per_col: int):
+	var cols = int(ceil(float(item_count) / max_items_per_col))
+	var rows = max_items_per_col
+
+	var children = []
+	for i in range(item_count):
+		children.append(item_display.get_child(i))
+
+	var reordered = []
+
+	for row in range(rows):
+		for col in range(cols):
+			var idx = col * rows + row
+			if idx < item_count:
+				reordered.append(children[idx])
+
+	# Remove all children before re-adding
+	for child in children:
+		item_display.remove_child(child)
+
+	for child in reordered:
+		item_display.add_child(child)
+		
+func flip_item_display_horizontally():
+	# Flip the entire grid horizontally
+	item_display.scale.x = -1
+	# Flip each icon back to normal so they don't appear mirrored
+	for child in item_display.get_children():
+		child.scale.x = -1
 
 func fade_out(duration = 1.0) -> void:
 	fade_rect.visible = true
@@ -200,3 +256,18 @@ func update_item_display_size():
 	var panel = margin_container.get_parent()
 	var panel_padding = Vector2(20, 20) # tweak as you want
 	panel.custom_minimum_size = Vector2(width, height) + panel_padding
+
+	var mc_size = margin_container.get_size()
+	var id_size = item_display.custom_minimum_size
+	item_display.custom_minimum_size = Vector2(width, height)
+
+func check_win_condition_1():
+	for item_name in required_items_for_ending_1:
+		if not collected_item_ids.has(item_name):
+			return false
+	return true
+
+func debug_log_interactables():
+	for i in get_tree().get_current_scene().get_children():
+		if i is Area2D:
+			print("Interactable: ", i.name)

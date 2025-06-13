@@ -6,6 +6,7 @@ extends Area2D
 @export var memory_text: String = ""
 @export var sprite_region: Rect2 = Rect2()
 @export var texture: Texture2D
+@export var interactable_name: String = ""
 
 var main_node
 var player_in_range = false
