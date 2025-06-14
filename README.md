@@ -42,7 +42,7 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 ## TODO
 
-- [ ] Add end sequence once all memory items are collected
+- [x] Add end sequence once all memory items are collected
 - [ ] Additional rooms and looping variations
 - [ ] Audio feedback (ambience, item SFX, music)
 - [ ] Polished UI animations
