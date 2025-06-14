@@ -1,273 +1,285 @@
-#main.gd
-
 extends Node2D
 
+# --- Nodes & Resources ---
 @onready var player = $Player
-@onready var ui = $UI 
-@onready var item_panel_container = $UI/Panel2 
+@onready var ui = $UI
+@onready var item_panel_container = $UI/Panel2
 @onready var item_display = $UI/Panel2/CenterContainer/ItemDisplay
 @onready var collectibles = $Collectibles
 @onready var layer = $Layers
 @onready var exit_trigger = $Triggers/Exit
+@onready var fade_rect = $UI/FadeRect
+
 @onready var ItemScene = preload("res://scenes/item.tscn")
-@onready var fade_rect = $FadeRect
+@onready var ItemData = preload("res://scripts/item_data.gd").new()
 @onready var tileset_texture = preload("res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_SmallItems.png")
 
-var current_run = 1
-var max_runs = 3
-var memory_items_collected = 0
-var collected_this_run = []
+# --- Game State ---
+var current_run := 1
+var max_runs := 3
+var memory_items_collected := 0
+var collected_this_run := []
+var collected_item_ids := []
 var revealed_hidden_items := {}
-var required_items_for_ending_1 := ["image1", "bookshelf1", "pot2"]
-var collected_item_ids := []  # stores interactable_name of each collected item
+var lore_interactions := {}
+var collected_tags: Array[String] = []
 
-var max_items_per_col = 5
+# --- UI Layout ---
+var max_items_per_col := 5
 
-# item data
-var item_data = {
-	1: [
-		{
-			"interact": "image1",
-			"pos": Vector2(170, 47),
-			"text": "A cracked photograph. Someone's missing...",
-			"hidden": false,
-			"region_rect": Rect2(16, 16, 16, 16)
-		},
-		{
-			"interact": "bookshelf1",
-			"spawn_pos": Vector2(120, 101),
-			"text": "The pages mention a hospital room.",
-			"hidden": true,
-			"region_rect": Rect2(0, 48, 16, 16)
-		}
-	],
-	2: [
-		{
-			"interact": "dogbed1",
-			"spawn_pos": Vector2(600, 100),
-			"text": "A dog toy. You remember crying.",
-			"hidden": true,
-			"region_rect": Rect2(0, 32, 16, 16)
-		},
-		{
-			"interact": "pot1",
-			"spawn_pos": Vector2(712, 102),
-			"text": "A letter half-burned: 'We’re sorry, we had to let go.'",
-			"hidden": true,
-			"region_rect": Rect2(32, 16, 16, 16)
-		}
-	],
-	3: [
-		{
-			"interact": "pot2",
-			"pos": Vector2(480, 62),
-			"text": "A flower pot. A small card says 'Get Well Soon!'. Your name is on it.",
-			"hidden": false,
-			"region_rect": Rect2(112, 16, 16, 16)
-		}
-	]
+# collection count
+var collected_tags_count := {
+	"neutral": 0,
+	"bad": 0,
+	"secret": 0
 }
 
-func _ready():
+# --- Scene Setup ---
+func _ready() -> void:
 	player.ui = ui
-	
-	var item_count = item_display.get_child_count()
-	var cols = max(1, int(ceil(float(item_count) / max_items_per_col)))
-	item_display.columns = cols
-		
-	print("Current run: ", current_run)
-	
-	exit_trigger.main_node = self
-	item_panel_container.visible = false
 	player.movement_locked = true
+	
+	fade_rect.color = Color(0, 0, 0, 1)  # fully black
+	fade_rect.visible = true
+	await fade_in_screen(1.0)
+
+	exit_trigger.main_node = self
+	print("exit_trigger has script:", exit_trigger)
+
+	item_panel_container.visible = false
 	spawn_items_for_run(current_run)
+	update_item_display_columns()
 
-	await ui.show_message("I don't remember how I got here...")
-	await ui.show_message("I fell asleep, I think.")
-	await ui.show_message("It's been dark for so long...")
-	await ui.show_message("And now, I'm just... here.")
-	await ui.show_message("Maybe I should look around. Find something...")
-	await ui.show_message("or someone.")
+	await _intro_messages()
 
 	player.movement_locked = false
 
-func _on_lore_text_done():
-	player.movement_locked = false
+# --- Intro ---
+func _intro_messages() -> void:
+	await ui.show_message(["I don't remember how I got here..."])
+	await ui.show_message(["I fell asleep, I think."])
+	await ui.show_message(["It's been dark for so long..."])
+	await ui.show_message(["And now, I'm just... here."])
+	await ui.show_message(["Maybe I should look around. Find something..."])
+	await ui.show_message(["or someone."])
 
-func next_run():
+# --- Run Progression ---
+func next_run() -> void:
 	current_run += 1
 	player.movement_locked = true
+	
+	await fade_out_screen(1.0)
 
-	await fade_out(1.0)
-	await ui.show_message("Memories feel different this time...")
-
+	# Reset player position and collectibles
 	player.global_position = Vector2(26, 133)
 	for child in collectibles.get_children():
 		child.queue_free()
 
 	spawn_items_for_run(current_run)
-
-	await fade_in(1.0)
+	exit_trigger.reset_interaction()
+	
+	await fade_in_screen(1.0)
 	player.movement_locked = false
 
-func end_game():
-	await fade_out(2)
-	await ui.show_message("You've collected all memories... You wake up.")
-	# Maybe change scene or stop player input here
+func end_game() -> void:
+	await ui.show_message(["You've collected all memories... You wake up."])
 	player.movement_locked = true
-	# Optionally go to ending scene:
-	# get_tree().change_scene("res://scenes/ending_scene.tscn")
+	await fade_out_screen(1.0)
+	get_tree().change_scene("res://scenes/GameOver.tscn")
 
+# --- Item Spawning & Interaction ---
 func spawn_items_for_run(run):
-	var items = item_data.get(run, [])
+	var items = ItemData.data.get(run, [])
 	for item in items:
 		if item.hidden:
 			continue
-		spawn_item(item.pos, item.text, item.region_rect, item.interact)
+		var use_sprite2 = item.get("use_sprite2", false)
+		spawn_item(item.pos, item.text, item.region_rect, item.interact, item.ending_tag, use_sprite2)
 
 func reveal_hidden_item(interact_name: String) -> bool:
-	# Prevent re-spawning
 	if revealed_hidden_items.has(interact_name):
 		return false
 
-	for item in item_data.get(current_run, []):
+	for item in ItemData.data.get(current_run, []):
 		if item.hidden and item.get("interact") == interact_name:
-			spawn_item(item.spawn_pos, item.text, item.region_rect, interact_name)
-			revealed_hidden_items[interact_name] = true
-			return true
+			if item.has("unlock_condition"):
+				var cond = item.unlock_condition
+				if cond.type == "lore_count":
+					var count = 0
+					for name in cond.names:
+						count += lore_interactions.get(name, 0)
+					if count < cond.required:
+						print("Unlock condition not met for:", interact_name)
+						return false
 	return false
 
-func spawn_item(pos: Vector2, memory_text: String, sprite_region: Rect2 = Rect2(), interact_name: String = ""):
+func spawn_item(pos: Vector2, memory_text: String, region: Rect2, interact_name: String = "", ending_tag: String = "neutral", use_sprite2: bool = false) -> Node:
 	var item = ItemScene.instantiate()
 	item.global_position = pos
 	item.memory_text = memory_text
-	item.sprite_region = sprite_region
+	item.sprite_region = region
 	item.texture = tileset_texture
-	item.interactable_name = interact_name  # <== set it here
+	item.interactable_name = interact_name
+	item.ending_tag = ending_tag
 	item.main_node = self
+	item.use_sprite2 = use_sprite2  
 	collectibles.add_child(item)
-	print("Spawned item: ", memory_text, " at ", pos)
+	print("Spawned item: ", interact_name, " → Tag:", ending_tag, " | use_sprite2:", use_sprite2)
 	return item
 
-func on_item_collected(item):
-	var texture = item.texture
-	var region = item.sprite_region
-	var memory_text = item.memory_text
-	var interact_name = item.interactable_name
+func register_lore_interaction(name: String) -> void:
+	if lore_interactions.has(name):
+		lore_interactions[name] += 1
+	else:
+		lore_interactions[name] = 1
 
+	print("Lore interaction:", name, " → Count:", lore_interactions[name])
+
+func on_item_collected(item) -> void:
 	memory_items_collected += 1
-	collected_this_run.append(memory_text)
-	collected_item_ids.append(interact_name)
+	collected_this_run.append(item.memory_text)
+	collected_item_ids.append(item.interactable_name)
+	collected_tags.append(item.ending_tag)
+	
+	# Increment count for tag
+	if collected_tags_count.has(item.ending_tag):
+		collected_tags_count[item.ending_tag] += 1
+	else:
+		collected_tags_count[item.ending_tag] = 1
 
-	print("Collected item: ", interact_name, " - ", memory_text)
+	print("Collected:", item.name, " → Tag:", item.ending_tag)
 
-	add_item_icon_to_ui(texture, region, memory_text)
+	add_item_icon_to_ui(item.texture, item.sprite_region, item.memory_text)
 
-func add_item_icon_to_ui(texture: Texture2D, region: Rect2, memory_text: String):
-	var icon = TextureRect.new()
+# --- UI Updates ---
+func add_item_icon_to_ui(texture: Texture2D, region: Rect2, memory_text: String) -> void:
+	var icon := TextureRect.new()
 	icon.expand_mode = TextureRect.EXPAND_KEEP_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	icon.custom_minimum_size = Vector2(16, 16)
 	icon.tooltip_text = memory_text
 
 	if region.size != Vector2.ZERO:
-		var atlas_tex = AtlasTexture.new()
+		var atlas_tex := AtlasTexture.new()
 		atlas_tex.atlas = texture
 		atlas_tex.region = region
 		icon.texture = atlas_tex
 	else:
 		icon.texture = texture
 
-	if item_display:
-		if not item_panel_container.visible:
-			item_panel_container.visible = true
-		item_display.add_child(icon)
+	if not item_panel_container.visible:
+		item_panel_container.visible = true
 
-		var item_count = item_display.get_child_count()
-		var cols = int(ceil(float(item_count) / max_items_per_col))
-		item_display.columns = cols
+	item_display.add_child(icon)
+	update_item_display_columns()
+	reorder_items_column_first()
+	update_item_display_size()
 
-		reorder_items_for_column_first(item_count, max_items_per_col)
-		update_item_display_size()
-	else:
-		print("ERROR: item_display not found")
+func update_item_display_columns() -> void:
+	var count = item_display.get_child_count()
+	item_display.columns = max(1, int(ceil(float(count) / max_items_per_col)))
 
-func reorder_items_for_column_first(item_count: int, max_items_per_col: int):
-	var cols = int(ceil(float(item_count) / max_items_per_col))
-	var rows = max_items_per_col
+func reorder_items_column_first() -> void:
+	var children := item_display.get_children()
+	var count := children.size()
+	var cols := int(ceil(float(count) / max_items_per_col))
+	var rows := max_items_per_col
 
-	var children = []
-	for i in range(item_count):
-		children.append(item_display.get_child(i))
-
-	var reordered = []
-
+	var reordered := []
 	for row in range(rows):
 		for col in range(cols):
-			var idx = col * rows + row
-			if idx < item_count:
-				reordered.append(children[idx])
+			var i = col * rows + row
+			if i < count:
+				reordered.append(children[i])
 
-	# Remove all children before re-adding
 	for child in children:
 		item_display.remove_child(child)
-
 	for child in reordered:
 		item_display.add_child(child)
-		
-func flip_item_display_horizontally():
-	# Flip the entire grid horizontally
-	item_display.scale.x = -1
-	# Flip each icon back to normal so they don't appear mirrored
-	for child in item_display.get_children():
-		child.scale.x = -1
 
-func fade_out(duration = 1.0) -> void:
-	fade_rect.visible = true
-	var tween = create_tween()
-	tween.tween_property(fade_rect, "modulate:a", 1.0, duration)
-	await tween.finished
-
-func fade_in(duration = 1.0) -> void:
-	var tween = create_tween()
-	tween.tween_property(fade_rect, "modulate:a", 0.0, duration)
-	await tween.finished
-	fade_rect.visible = false
-
-func update_item_display_size():
-	var item_count = item_display.get_child_count()
-	var items_per_row = item_display.columns
-	var item_icon_size = Vector2(16, 16)
+func update_item_display_size() -> void:
+	var count = item_display.get_child_count()
+	var cols = item_display.columns
+	var icon_size = Vector2(16, 16)
 	var padding = 4
+	var rows = ceil(float(count) / cols)
 
-	var rows = ceil(float(item_count) / items_per_row)
+	var width = cols * (icon_size.x + padding) - padding
+	var height = rows * (icon_size.y + padding) - padding
 
-	var width = items_per_row * (item_icon_size.x + padding) - padding
-	var height = rows * (item_icon_size.y + padding) - padding
-
-	# Update ItemDisplay (GridContainer) size
 	item_display.custom_minimum_size = Vector2(width, height)
 
-	# Update MarginContainer size (adds padding)
 	var margin_container = item_display.get_parent()
 	margin_container.custom_minimum_size = Vector2(width, height)
 
-	# Update Panel size with extra padding for border/background
 	var panel = margin_container.get_parent()
-	var panel_padding = Vector2(20, 20) # tweak as you want
-	panel.custom_minimum_size = Vector2(width, height) + panel_padding
+	panel.custom_minimum_size = Vector2(width, height) + Vector2(20, 20)
 
-	var mc_size = margin_container.get_size()
-	var id_size = item_display.custom_minimum_size
-	item_display.custom_minimum_size = Vector2(width, height)
+func flip_item_display_horizontally() -> void:
+	item_display.scale.x = -1
+	for child in item_display.get_children():
+		child.scale.x = -1
 
-func check_win_condition_1():
-	for item_name in required_items_for_ending_1:
-		if not collected_item_ids.has(item_name):
-			return false
-	return true
+func get_ending() -> String:
+	var secret_items_total = 3  # total secret items needed for secret ending
 
-func debug_log_interactables():
-	for i in get_tree().get_current_scene().get_children():
-		if i is Area2D:
-			print("Interactable: ", i.name)
+	var neutral_count = collected_tags_count.get("neutral", 0)
+	var bad_count = collected_tags_count.get("bad", 0)
+	var secret_count = collected_tags_count.get("secret", 0)
+	var total_collected = neutral_count + bad_count + secret_count
+
+	# Dumb ending: no items collected
+	if total_collected == 0:
+		return "dumb"
+
+	# Secret ending first: must collect ALL secret items
+	if secret_count == secret_items_total:
+		return "secret"
+
+	# Otherwise, compare bad vs neutral
+	if bad_count > neutral_count:
+		return "bad"
+	else:
+		return "neutral"
+
+func trigger_ending(ending: String) -> void:
+	player.movement_locked = true
+
+	match ending:
+		"secret":
+			await fade_out_screen(1.0)  # before the message
+			await ui.show_message(["Secret Ending Unlocked! You've uncovered all the hidden secrets..."])
+		"bad":
+			await fade_out_screen(1.0)  # before the message
+			await ui.show_message(["Bad Ending... Your choices have consequences."])
+		"neutral":
+			await fade_out_screen(1.0)  # before the message
+			await ui.show_message(["Neutral Ending. You wake up, memories fading..."])
+		"dumb":
+			await fade_out_screen(1.0)  # before the message
+			await ui.show_message(["You didn't collect anything... Maybe try paying attention next time? You're kinda dumb."])
+	
+	get_tree().change_scene_to_file("res://scenes/GameOver.tscn")
+
+# --- Screen Fade In/Out ---
+
+func fade_out_screen(duration := 1.0) -> void:
+	fade_rect.color.a = 0  # start fully transparent
+	fade_rect.visible = true
+	var tween := create_tween()
+	tween.tween_property(fade_rect, "color:a", 1.0, duration) #fade to black
+	await tween.finished
+
+func fade_in_screen(duration := 1.0) -> void:
+	fade_rect.color.a = 1.0  # start fully black
+	fade_rect.visible = true
+	var tween := create_tween()
+	tween.tween_property(fade_rect, "color:a", 0.0, duration) #fade to transparent
+	await tween.finished
+	fade_rect.visible = false  # hide it again when done
+
+# --- Debug ---
+func debug_log_interactables() -> void:
+	for node in get_tree().get_current_scene().get_children():
+		if node is Area2D:
+			print("Interactable: ", node.name)

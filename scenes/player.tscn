@@ -366,10 +366,16 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_stmj8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_stmj8")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_stmj8")
 }],
 "loop": false,
 "name": &"death-down",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -389,10 +395,16 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_vr6p3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vr6p3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_vr6p3")
 }],
 "loop": false,
 "name": &"death-side",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -412,10 +424,16 @@ animations = [{
 }, {
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_akwyc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_akwyc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_akwyc")
 }],
 "loop": false,
 "name": &"death-up",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -615,7 +633,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run-down",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -644,7 +662,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run-side",
-"speed": 5.0
+"speed": 10.0
 }, {
 "frames": [{
 "duration": 1.0,
@@ -673,7 +691,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"run-up",
-"speed": 5.0
+"speed": 10.0
 }]
 
 [node name="CharacterBody2D" type="CharacterBody2D"]
@@ -688,5 +706,5 @@ unique_name_in_owner = true
 position = Vector2(-0.5, -1)
 scale = Vector2(0.9875, 1)
 sprite_frames = SubResource("SpriteFrames_pxuqu")
-animation = &"run-side"
+animation = &"death-down"
 autoplay = "idle-side"

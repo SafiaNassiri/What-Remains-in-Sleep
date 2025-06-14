@@ -13,7 +13,6 @@
 [ext_resource type="Script" path="res://scripts/ui.gd" id="10_icbgp"]
 [ext_resource type="Script" path="res://scripts/ExitBlock.gd" id="11_gpqo5"]
 [ext_resource type="FontFile" uid="uid://c2djd2tlipli4" path="res://fonts/QuinqueFive_Font_1_15/QuinqueFive.ttf" id="11_yhp7u"]
-[ext_resource type="Script" path="res://scenes/stairs.gd" id="13_u2120"]
 [ext_resource type="Script" path="res://scripts/Interactable.gd" id="14_elyel"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0s0e3"]
@@ -3604,6 +3603,9 @@ size = Vector2(8, 20)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_vy1ek"]
 size = Vector2(12, 15)
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wsli7"]
+size = Vector2(20, 30)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nc33e"]
 size = Vector2(43, 28)
 
@@ -3616,14 +3618,14 @@ size = Vector2(30, 32)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ewkka"]
 size = Vector2(8, 22)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_wsli7"]
-size = Vector2(20, 30)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nyk0c"]
 size = Vector2(20, 23)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_566ug"]
 size = Vector2(16, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_31lp0"]
+size = Vector2(15, 42)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cwiup"]
 bg_color = Color(0, 0, 0, 0.27451)
@@ -3700,6 +3702,13 @@ script = ExtResource("11_gpqo5")
 position = Vector2(786, 136)
 shape = SubResource("RectangleShape2D_vy1ek")
 
+[node name="Stairs" type="Area2D" parent="Triggers"]
+position = Vector2(-12, -136)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/Stairs"]
+position = Vector2(324, 81)
+shape = SubResource("RectangleShape2D_wsli7")
+
 [node name="Interactibles" type="Node2D" parent="."]
 
 [node name="bookshelf1" type="Area2D" parent="Interactibles"]
@@ -3723,6 +3732,7 @@ shape = SubResource("RectangleShape2D_xntlj")
 [node name="recordplayer1" type="Area2D" parent="Interactibles"]
 script = ExtResource("14_elyel")
 interactable_name = "recordplayer1"
+can_reveal_item = false
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/recordplayer1"]
 position = Vector2(400, 86)
@@ -3736,13 +3746,6 @@ interact_type = "reveal_item"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/pot1"]
 position = Vector2(712, 88)
 shape = SubResource("RectangleShape2D_ewkka")
-
-[node name="Stairs" type="Area2D" parent="Interactibles"]
-script = ExtResource("13_u2120")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Stairs"]
-position = Vector2(324, 81)
-shape = SubResource("RectangleShape2D_wsli7")
 
 [node name="dogbed1" type="Area2D" parent="Interactibles"]
 script = ExtResource("14_elyel")
@@ -3771,34 +3774,43 @@ can_reveal_item = false
 position = Vector2(170, 71)
 shape = SubResource("RectangleShape2D_566ug")
 
-[node name="TEMP" type="Node2D" parent="."]
-position = Vector2(170, 47)
+[node name="mirror1" type="Area2D" parent="Interactibles"]
+script = ExtResource("14_elyel")
+interactable_name = "mirror1"
+can_reveal_item = false
+ending_tag = "secret"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/mirror1"]
+position = Vector2(374.5, 67)
+shape = SubResource("RectangleShape2D_31lp0")
 
 [node name="UI" type="CanvasLayer" parent="."]
 script = ExtResource("10_icbgp")
 
-[node name="Panel" type="Panel" parent="UI"]
-visible = false
-anchors_preset = 12
-anchor_top = 1.0
+[node name="FadeRect" type="ColorRect" parent="UI"]
+anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = -50.0
 grow_horizontal = 2
-grow_vertical = 0
+grow_vertical = 2
+color = Color(0, 0, 0, 0.00392157)
 
-[node name="MarginContainer" type="MarginContainer" parent="UI/Panel"]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-theme_override_constants/margin_left = 10
-theme_override_constants/margin_top = 10
-theme_override_constants/margin_right = 10
-theme_override_constants/margin_bottom = 10
+[node name="Panel" type="Panel" parent="UI"]
+visible = false
+anchors_preset = -1
+anchor_top = 0.74
+anchor_bottom = 0.74
+offset_top = -0.0800018
+offset_right = 288.0
+offset_bottom = 49.92
+size_flags_vertical = 4
 
-[node name="Label" type="Label" parent="UI/Panel/MarginContainer"]
-custom_minimum_size = Vector2(288, 0)
+[node name="Label" type="Label" parent="UI/Panel"]
 layout_mode = 2
+offset_left = 18.0
+offset_top = 16.0
+offset_right = 270.0
+offset_bottom = 46.0
 theme_override_fonts/font = ExtResource("11_yhp7u")
 theme_override_font_sizes/font_size = 5
 text = "..."
@@ -3833,29 +3845,25 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
-[node name="QuitConfirmDialog" type="ConfirmationDialog" parent="UI"]
-title = ""
-position = Vector2i(-152, 46)
-size = Vector2i(593, 100)
-unresizable = true
-keep_title_visible = false
-dialog_text = "Are you sure you want to quit?"
-dialog_hide_on_ok = false
-dialog_autowrap = true
-
-[node name="FadeRect" type="ColorRect" parent="."]
-visible = false
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0)
+[node name="TEMP" type="Node2D" parent="."]
+position = Vector2(375, 61)
 
 [connection signal="body_entered" from="Triggers/Entrance" to="Triggers/Entrance" method="_on_entrance_body_entered"]
 [connection signal="body_entered" from="Triggers/Exit" to="Triggers/Exit" method="_on_body_entered"]
-[connection signal="area_entered" from="Interactibles/bookshelf1" to="Interactibles/bookshelf1" method="_on_area_entered"]
-[connection signal="area_exited" from="Interactibles/bookshelf1" to="Interactibles/bookshelf1" method="_on_area_exited"]
-[connection signal="body_entered" from="Interactibles/Stairs" to="Interactibles/Stairs" method="_on_body_entered"]
-[connection signal="body_exited" from="Interactibles/Stairs" to="Interactibles/Stairs" method="_on_body_exited"]
-[connection signal="confirmed" from="UI/QuitConfirmDialog" to="UI" method="_on_quit_confirm_dialog_confirmed"]
+[connection signal="body_exited" from="Triggers/Exit" to="Triggers/Exit" method="_on_body_exited"]
+[connection signal="body_entered" from="Triggers/Stairs" to="Triggers/Stairs" method="_on_body_entered"]
+[connection signal="body_exited" from="Triggers/Stairs" to="Triggers/Stairs" method="_on_body_exited"]
+[connection signal="body_entered" from="Interactibles/bookshelf1" to="Interactibles/bookshelf1" method="_on_body_entered"]
+[connection signal="body_exited" from="Interactibles/bookshelf1" to="Interactibles/bookshelf1" method="_on_body_exited"]
+[connection signal="body_entered" from="Interactibles/clock1" to="Interactibles/clock1" method="_on_body_entered"]
+[connection signal="body_exited" from="Interactibles/clock1" to="Interactibles/clock1" method="_on_body_exited"]
+[connection signal="body_entered" from="Interactibles/recordplayer1" to="Interactibles/recordplayer1" method="_on_body_entered"]
+[connection signal="body_exited" from="Interactibles/recordplayer1" to="Interactibles/recordplayer1" method="_on_body_exited"]
+[connection signal="body_entered" from="Interactibles/pot1" to="Interactibles/pot1" method="_on_body_entered"]
+[connection signal="body_exited" from="Interactibles/pot1" to="Interactibles/pot1" method="_on_body_exited"]
+[connection signal="body_entered" from="Interactibles/dogbed1" to="Interactibles/dogbed1" method="_on_body_entered"]
+[connection signal="body_exited" from="Interactibles/dogbed1" to="Interactibles/dogbed1" method="_on_body_exited"]
+[connection signal="body_entered" from="Interactibles/pot2" to="Interactibles/pot2" method="_on_body_entered"]
+[connection signal="body_exited" from="Interactibles/pot2" to="Interactibles/pot2" method="_on_body_exited"]
+[connection signal="body_entered" from="Interactibles/image1" to="Interactibles/image1" method="_on_body_entered"]
+[connection signal="body_exited" from="Interactibles/image1" to="Interactibles/image1" method="_on_body_exited"]
