@@ -17,7 +17,7 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 - **WASD / Arrow Keys** – Move
 - **E / Enter** – Interact
-- **Esc** – Exit game (in development)
+- **Esc** – Exit game
 
 ---
 
@@ -25,7 +25,7 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 - Built with [Godot Engine](https://godotengine.org/)  
 - Art assets: Top-down pixel tileset from itch.io 
-- SFX / Music: 
+- SFX / Music: TBD
 
 ---
 
@@ -66,5 +66,5 @@ This game is a student/personal project. Not for commercial use unless stated ot
 
 ---
 
-## “Time of death: 14:35... but time never left.”
+## “Time of death: 14:35... but time never elapsed.”
 
