@@ -104,13 +104,19 @@ func reveal_hidden_item(interact_name: String) -> bool:
 		if item.hidden and item.get("interact") == interact_name:
 			if item.has("unlock_condition"):
 				var cond = item.unlock_condition
-				if cond.type == "lore_count":
-					var count = 0
-					for name in cond.names:
-						count += lore_interactions.get(name, 0)
-					if count < cond.required:
-						print("Unlock condition not met for:", interact_name)
-						return false
+				var count = 0
+				for name in cond.names:
+					count += lore_interactions.get(name, 0)
+				if count < cond.required:
+					print("Unlock condition not met for:", interact_name)
+					return false
+
+			# Passed conditions – spawn item
+			var use_sprite2 = item.get("use_sprite2", false)
+			spawn_item(item.pos, item.text, item.region_rect, item.interact, item.ending_tag, use_sprite2)
+			revealed_hidden_items[interact_name] = true
+			return true
+
 	return false
 
 func spawn_item(pos: Vector2, memory_text: String, region: Rect2, interact_name: String = "", ending_tag: String = "neutral", use_sprite2: bool = false) -> Node:
