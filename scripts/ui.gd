@@ -7,6 +7,8 @@ signal message_closed
 
 @onready var panel = $Panel
 @onready var label = $Panel/Label
+@onready var item_panel = $Panel2
+@onready var item_display = $Panel2/CenterContainer/ItemDisplay
 
 var full_text := ""
 var char_index := 0
@@ -72,3 +74,27 @@ func _clear_message() -> void:
 	if typing_timer:
 		typing_timer.queue_free()
 		typing_timer = null
+
+func add_item_to_display(sprite: Sprite2D) -> void:
+	if not item_panel.visible:
+		item_panel.visible = true
+	
+	var icon = TextureRect.new()
+	
+	if sprite.region_enabled:
+		var atlas_tex = AtlasTexture.new()
+		atlas_tex.atlas = sprite.texture
+		atlas_tex.region = sprite.region_rect
+		icon.texture = atlas_tex
+	else:
+		icon.texture = sprite.texture
+	
+	icon.stretch_mode = TextureRect.STRETCH_KEEP  # show texture at native size, no scaling
+	
+	# Set the size of TextureRect
+	if sprite.region_enabled:
+		icon.size = sprite.region_rect.size
+	else:
+		icon.size = sprite.texture.get_size()
+	
+	item_display.add_child(icon)

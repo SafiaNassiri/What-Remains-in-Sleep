@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://ckl86g7x8sgwh"]
+
+[ext_resource type="Texture2D" uid="uid://cuq1nq5udv18l" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_SmallItems.png" id="1_onici"]
+[ext_resource type="Script" path="res://scripts/item.gd" id="1_tl5ks"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5ccd2"]
+
+[node name="Book1" type="Node2D"]
+script = ExtResource("1_tl5ks")
+lore_text = "The pages mention a hospital room."
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_onici")
+region_enabled = true
+region_rect = Rect2(0, 48, 16, 16)
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_5ccd2")

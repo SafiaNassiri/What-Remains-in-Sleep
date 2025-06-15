@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://ba8feogl7s5q5"]
+
+[ext_resource type="Texture2D" uid="uid://cuq1nq5udv18l" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_SmallItems.png" id="1_eokn7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ax4ns"]
+
+[node name="Dogtoy" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_eokn7")
+region_enabled = true
+region_rect = Rect2(0, 32, 16, 16)
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_ax4ns")

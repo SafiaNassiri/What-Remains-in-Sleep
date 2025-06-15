@@ -1,43 +1,36 @@
-# Interactable.gd
+# interactable.gd
 extends Area2D
 
-@export var interactable_name: String
-@export var can_reveal_item: bool = true
-@export_enum("message", "reveal_item", "static") var interact_type := "message"
-@export_enum("neutral", "secret", "bad") var ending_tag: String = "neutral"
+@export var interaction_message: String = "Press [E] to interact."
+@export var message: String = ""
+@export var item_scene: PackedScene  # Optional: item to spawn
+@export var spawn_offset: Vector2 = Vector2(0, 16)  # Relative to this node
+@export var spawn_global_position: Vector2 = Vector2.ZERO  # Absolute position to spawn item; if Vector2.ZERO, use offset
 
-var player_in_area := false
-var main_node: Node = null
+signal interacted(item_spawned)
 
-func _ready() -> void:
-	main_node = get_tree().get_current_scene()
+func _ready():
+	set_monitoring(true)
+	set_monitorable(true)
 
-func _on_body_entered(body: Node) -> void:
-	if body.name == "Player":
-		player_in_area = true
-		body.current_interactable_node = self
+func handle_interaction(player) -> void:
+	# Show message if there is one
+	if interaction_message != "":
+		await player.ui.show_message([interaction_message])
+	if message != "":
+		await player.ui.show_message([message])
 
-func _on_body_exited(body: Node) -> void:
-	if body.name == "Player" and body.current_interactable_node == self:
-		player_in_area = false
-		body.current_interactable_node = null
+	var spawned_item: Node = null
 
-func handle_interaction(player: Node) -> void:
-	var ui = main_node.get_node("UI")
-	if not ui: return
+	# Spawn item if set
+	if item_scene:
+		spawned_item = item_scene.instantiate()
+		get_parent().add_child(spawned_item)
 
-	match interact_type:
-		"message":
-			var lore = main_node.ItemData.lore_snippets.get(interactable_name, [])
-			if lore.size() > 0:
-				await ui.show_message([lore[randi() % lore.size()]])
-			main_node.register_lore_interaction(interactable_name)
+		if spawn_global_position != Vector2.ZERO:
+			spawned_item.global_position = spawn_global_position
+		else:
+			spawned_item.global_position = global_position + spawn_offset
 
-		"reveal_item":
-			if not can_reveal_item: return
-			var revealed = main_node.reveal_hidden_item(interactable_name)
-			if revealed:
-				var lore = main_node.ItemData.lore_snippets.get(interactable_name, [])
-				if lore.size() > 0:
-					await ui.show_message([lore[randi() % lore.size()]])
-				main_node.register_lore_interaction(interactable_name)
+	# Emit signal with the spawned item (or null)
+	emit_signal("interacted", spawned_item)

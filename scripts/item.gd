@@ -1,45 +1,26 @@
-# Item.gd
-extends Area2D
+# item.gd
+extends Node2D
 
-@export var memory_text: String
-@export var sprite_region: Rect2 = Rect2()
-@export var texture: Texture2D
-@export var use_sprite2: bool = false
-@export var interactable_name: String
-@export_enum("secret", "neutral", "bad") var ending_tag: String = "neutral"
+@export var interaction_message: String = "Press [E] to pick up."
+@export var lore_text: String = ""
 
-@onready var sprite = $Sprite2D
-@onready var sprite2 = $Sprite2D2
+@onready var icon_texture: Texture2D = $Sprite2D.texture
 
-var main_node: Node = null
-var player_in_range := false
+signal interacted
 
-func _ready() -> void:
-	var active = sprite2 if use_sprite2 else sprite
-	var inactive = sprite if use_sprite2 else sprite2
-	inactive.visible = false
+func handle_interaction(player) -> void:
+	if interaction_message != "":
+		await player.ui.show_message([interaction_message])
 
-	if texture:
-		active.texture = texture
-		active.region_enabled = sprite_region.size != Vector2.ZERO
-		active.region_rect = sprite_region
+	if lore_text != "":
+		await player.ui.show_message([lore_text])
 
-func _on_body_entered(body: Node) -> void:
-	if body.name == "Player":
-		player_in_range = true
+	if player.has_method("collect_item"):
+		player.collect_item(self)
 
-func _on_body_exited(body: Node) -> void:
-	if body.name == "Player":
-		player_in_range = false
+	# Tell player you're no longer interactable before freeing
+	if player.current_interactable_node == self:
+		player.current_interactable_node = null
+		player.interactables_in_range.erase(self)
 
-func _process(_delta: float) -> void:
-	if player_in_range and Input.is_action_just_pressed("ui_accept"):
-		if main_node:
-			main_node.call_deferred("on_item_collected", self)
-			queue_free()
-
-# Add this to Item.gd
-func handle_interaction(player: Node) -> void:
-	if main_node:
-		main_node.call_deferred("on_item_collected", self)
-		queue_free()
+	queue_free()

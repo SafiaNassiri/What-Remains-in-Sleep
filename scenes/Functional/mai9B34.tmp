@@ -1,22 +1,25 @@
-[gd_scene load_steps=45 format=4 uid="uid://xllmnnpw1q57"]
+[gd_scene load_steps=47 format=4 uid="uid://xllmnnpw1q57"]
 
-[ext_resource type="Texture2D" uid="uid://cv6n7bqkqrrqk" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_FloorsAndWalls.png" id="1_igbok"]
-[ext_resource type="Script" path="res://scripts/main.gd" id="1_xyv0r"]
-[ext_resource type="Texture2D" uid="uid://dr57o81qj5kpb" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_FloorsAndWalls_OpenDoors.png" id="2_dibx4"]
-[ext_resource type="PackedScene" uid="uid://r3fcvtdbd1j6" path="res://scenes/player.tscn" id="2_q2onp"]
-[ext_resource type="Texture2D" uid="uid://c1fgopdqnqmtp" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_DoorsAndWindows.png" id="3_wb83w"]
-[ext_resource type="Texture2D" uid="uid://b7mk8am0jeeia" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_FurnitureState1.png" id="4_8ff3i"]
-[ext_resource type="Texture2D" uid="uid://1qlfd0loegrm" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_FurnitureState2.png" id="5_amy4l"]
-[ext_resource type="Texture2D" uid="uid://cuq1nq5udv18l" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_SmallItems.png" id="6_dpfa4"]
-[ext_resource type="Script" path="res://scripts/EntranceBlock.gd" id="9_85rth"]
-[ext_resource type="PackedScene" uid="uid://c061q8eqghn8o" path="res://scenes/item.tscn" id="9_fhp4s"]
-[ext_resource type="Script" path="res://scripts/ui.gd" id="10_icbgp"]
-[ext_resource type="Script" path="res://scripts/ExitBlock.gd" id="11_gpqo5"]
-[ext_resource type="FontFile" uid="uid://c2djd2tlipli4" path="res://fonts/QuinqueFive_Font_1_15/QuinqueFive.ttf" id="11_yhp7u"]
-[ext_resource type="Script" path="res://scripts/Interactable.gd" id="14_elyel"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_3b1cg"]
+[ext_resource type="Texture2D" uid="uid://cv6n7bqkqrrqk" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_FloorsAndWalls.png" id="2_uqaf8"]
+[ext_resource type="Texture2D" uid="uid://dr57o81qj5kpb" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_FloorsAndWalls_OpenDoors.png" id="3_wc7ua"]
+[ext_resource type="Texture2D" uid="uid://c1fgopdqnqmtp" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_DoorsAndWindows.png" id="4_kyg3c"]
+[ext_resource type="Texture2D" uid="uid://b7mk8am0jeeia" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_FurnitureState1.png" id="5_yn3ys"]
+[ext_resource type="Texture2D" uid="uid://1qlfd0loegrm" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_FurnitureState2.png" id="6_4kj3l"]
+[ext_resource type="Texture2D" uid="uid://cuq1nq5udv18l" path="res://Sprites&TileMaps/Top-Down_Retro_Interior/TopDownHouse_SmallItems.png" id="7_wurbt"]
+[ext_resource type="PackedScene" uid="uid://r3fcvtdbd1j6" path="res://scenes/Functional/player.tscn" id="8_2vyc2"]
+[ext_resource type="PackedScene" uid="uid://c061q8eqghn8o" path="res://scenes/Functional/item.tscn" id="9_tq2fe"]
+[ext_resource type="Script" path="res://scripts/EntranceBlock.gd" id="10_5dmci"]
+[ext_resource type="Script" path="res://scripts/ExitBlock.gd" id="11_0d712"]
+[ext_resource type="Script" path="res://scripts/ui.gd" id="12_ydlfi"]
+[ext_resource type="FontFile" uid="uid://c2djd2tlipli4" path="res://fonts/QuinqueFive_Font_1_15/QuinqueFive.ttf" id="13_m1a57"]
+[ext_resource type="PackedScene" uid="uid://btufn1iemn5kd" path="res://scenes/Items/Image1.tscn" id="14_hxerf"]
+[ext_resource type="Script" path="res://scripts/Interactable.gd" id="15_kgpq2"]
+[ext_resource type="PackedScene" uid="uid://ckl86g7x8sgwh" path="res://scenes/Items/Book1.tscn" id="16_x60kh"]
+[ext_resource type="PackedScene" uid="uid://ba8feogl7s5q5" path="res://scenes/Items/Dogtoy.tscn" id="17_ef26l"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0s0e3"]
-texture = ExtResource("1_igbok")
+texture = ExtResource("2_uqaf8")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -184,7 +187,7 @@ texture = ExtResource("1_igbok")
 sources/0 = SubResource("TileSetAtlasSource_0s0e3")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_821cx"]
-texture = ExtResource("1_igbok")
+texture = ExtResource("2_uqaf8")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
@@ -440,7 +443,7 @@ texture = ExtResource("1_igbok")
 17:8/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_rp6gr"]
-texture = ExtResource("2_dibx4")
+texture = ExtResource("3_wc7ua")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -472,7 +475,7 @@ sources/0 = SubResource("TileSetAtlasSource_821cx")
 sources/1 = SubResource("TileSetAtlasSource_rp6gr")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_o2787"]
-texture = ExtResource("3_wb83w")
+texture = ExtResource("4_kyg3c")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -652,7 +655,7 @@ texture = ExtResource("3_wb83w")
 sources/0 = SubResource("TileSetAtlasSource_o2787")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_e37ed"]
-texture = ExtResource("3_wb83w")
+texture = ExtResource("4_kyg3c")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
@@ -881,7 +884,7 @@ physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_e37ed")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_njcfu"]
-texture = ExtResource("4_8ff3i")
+texture = ExtResource("5_yn3ys")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-2, -2.875, 8, -2.875, 8, 8, -1.375, 8)
 1:0/0 = 0
@@ -1319,7 +1322,7 @@ texture = ExtResource("4_8ff3i")
 12:17/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ktbw3"]
-texture = ExtResource("5_amy4l")
+texture = ExtResource("6_4kj3l")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-1.23744, -2.82843, 8, -3.09359, 8, 8, -1.67938, 8)
 1:0/0 = 0
@@ -1758,7 +1761,7 @@ texture = ExtResource("5_amy4l")
 12:17/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_cfvii"]
-texture = ExtResource("6_dpfa4")
+texture = ExtResource("7_wurbt")
 0:0/0 = 0
 1:0/0 = 0
 2:0/0 = 0
@@ -1831,7 +1834,7 @@ sources/1 = SubResource("TileSetAtlasSource_ktbw3")
 sources/2 = SubResource("TileSetAtlasSource_cfvii")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_chi5b"]
-texture = ExtResource("4_8ff3i")
+texture = ExtResource("5_yn3ys")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
@@ -2275,7 +2278,7 @@ texture = ExtResource("4_8ff3i")
 12:17/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_npwue"]
-texture = ExtResource("5_amy4l")
+texture = ExtResource("6_4kj3l")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
@@ -2705,7 +2708,7 @@ sources/0 = SubResource("TileSetAtlasSource_chi5b")
 sources/1 = SubResource("TileSetAtlasSource_npwue")
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_uxbjh"]
-texture = ExtResource("4_8ff3i")
+texture = ExtResource("5_yn3ys")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
@@ -3149,7 +3152,7 @@ texture = ExtResource("4_8ff3i")
 12:17/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_lryam"]
-texture = ExtResource("5_amy4l")
+texture = ExtResource("6_4kj3l")
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
 1:0/0 = 0
@@ -3606,27 +3609,6 @@ size = Vector2(12, 15)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wsli7"]
 size = Vector2(20, 30)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_nc33e"]
-size = Vector2(43, 28)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_xntlj"]
-size = Vector2(17, 25)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_x2t0i"]
-size = Vector2(30, 32)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_ewkka"]
-size = Vector2(8, 22)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_nyk0c"]
-size = Vector2(20, 23)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_566ug"]
-size = Vector2(16, 48)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_31lp0"]
-size = Vector2(15, 42)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cwiup"]
 bg_color = Color(0, 0, 0, 0.27451)
 corner_radius_top_left = 10
@@ -3634,8 +3616,26 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_28sj3"]
+size = Vector2(72.6901, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nfer3"]
+size = Vector2(19, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xj5cs"]
+size = Vector2(19, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_cyf4s"]
+size = Vector2(30, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8rwjc"]
+size = Vector2(30, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yrr1l"]
+size = Vector2(27, 17)
+
 [node name="main" type="Node2D"]
-script = ExtResource("1_xyv0r")
+script = ExtResource("1_3b1cg")
 metadata/_edit_vertical_guides_ = [1.0]
 
 [node name="Layers" type="Node2D" parent="."]
@@ -3670,8 +3670,9 @@ tile_set = SubResource("TileSet_xijcf")
 tile_map_data = PackedByteArray("AAAmAAUAAQALAAcAAAAmAAYAAQALAAgAAAAmAAcAAQALAAkAAAAnAAUAAQAMAAcAAAAnAAYAAQAMAAgAAAAnAAcAAQABAAoAAAArAAUAAQALAAcAABAqAAUAAQAMAAcAABArAAYAAQALAAgAABAqAAYAAQAMAAgAABArAAcAAQALAAkAABAqAAcAAQAEAAoAAAAnAAgAAQABAAsAAAAoAAcAAQACAAoAAAAoAAgAAQACAAsAAAApAAcAAQADAAoAAAApAAgAAQADAAsAAAAqAAgAAQAEAAsAAAA=")
 tile_set = SubResource("TileSet_a30lt")
 
-[node name="Player" parent="." instance=ExtResource("2_q2onp")]
+[node name="Player" parent="." instance=ExtResource("8_2vyc2")]
 position = Vector2(26, 133)
+speed = null
 
 [node name="Camera2D" type="Camera2D" parent="Player"]
 limit_left = -175
@@ -3679,16 +3680,17 @@ limit_smoothed = true
 
 [node name="Collectibles" type="Node2D" parent="."]
 
-[node name="Item" parent="Collectibles" instance=ExtResource("9_fhp4s")]
+[node name="Item" parent="Collectibles" instance=ExtResource("9_tq2fe")]
 visible = false
 position = Vector2(480, 63)
+lore_text = ""
 
 [node name="Triggers" type="Node2D" parent="."]
 position = Vector2(12, 136)
 
 [node name="Entrance" type="Area2D" parent="Triggers"]
 position = Vector2(-12, -136)
-script = ExtResource("9_85rth")
+script = ExtResource("10_5dmci")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/Entrance"]
 position = Vector2(10, 136)
@@ -3696,7 +3698,7 @@ shape = SubResource("RectangleShape2D_41hah")
 
 [node name="Exit" type="Area2D" parent="Triggers"]
 position = Vector2(-12, -136)
-script = ExtResource("11_gpqo5")
+script = ExtResource("11_0d712")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Triggers/Exit"]
 position = Vector2(786, 136)
@@ -3709,83 +3711,8 @@ position = Vector2(-12, -136)
 position = Vector2(324, 81)
 shape = SubResource("RectangleShape2D_wsli7")
 
-[node name="Interactibles" type="Node2D" parent="."]
-
-[node name="bookshelf1" type="Area2D" parent="Interactibles"]
-script = ExtResource("14_elyel")
-interactable_name = "bookshelf1"
-interact_type = "reveal_item"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/bookshelf1"]
-position = Vector2(104.5, 88)
-shape = SubResource("RectangleShape2D_nc33e")
-
-[node name="clock1" type="Area2D" parent="Interactibles"]
-script = ExtResource("14_elyel")
-interactable_name = "clock1"
-can_reveal_item = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/clock1"]
-position = Vector2(256.5, 85.5)
-shape = SubResource("RectangleShape2D_xntlj")
-
-[node name="recordplayer1" type="Area2D" parent="Interactibles"]
-script = ExtResource("14_elyel")
-interactable_name = "recordplayer1"
-can_reveal_item = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/recordplayer1"]
-position = Vector2(400, 86)
-shape = SubResource("RectangleShape2D_x2t0i")
-
-[node name="pot1" type="Area2D" parent="Interactibles"]
-script = ExtResource("14_elyel")
-interactable_name = "pot1"
-interact_type = "reveal_item"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/pot1"]
-position = Vector2(712, 88)
-shape = SubResource("RectangleShape2D_ewkka")
-
-[node name="dogbed1" type="Area2D" parent="Interactibles"]
-script = ExtResource("14_elyel")
-interactable_name = "dogbed1"
-interact_type = "reveal_item"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/dogbed1"]
-position = Vector2(592.5, 92.5)
-shape = SubResource("RectangleShape2D_nyk0c")
-
-[node name="pot2" type="Area2D" parent="Interactibles"]
-script = ExtResource("14_elyel")
-interactable_name = "pot2"
-can_reveal_item = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/pot2"]
-position = Vector2(480, 80.5)
-shape = SubResource("RectangleShape2D_nyk0c")
-
-[node name="image1" type="Area2D" parent="Interactibles"]
-script = ExtResource("14_elyel")
-interactable_name = "image1"
-can_reveal_item = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/image1"]
-position = Vector2(170, 71)
-shape = SubResource("RectangleShape2D_566ug")
-
-[node name="mirror1" type="Area2D" parent="Interactibles"]
-script = ExtResource("14_elyel")
-interactable_name = "mirror1"
-can_reveal_item = false
-ending_tag = "secret"
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/mirror1"]
-position = Vector2(374.5, 67)
-shape = SubResource("RectangleShape2D_31lp0")
-
 [node name="UI" type="CanvasLayer" parent="."]
-script = ExtResource("10_icbgp")
+script = ExtResource("12_ydlfi")
 
 [node name="FadeRect" type="ColorRect" parent="UI"]
 anchors_preset = 15
@@ -3811,7 +3738,7 @@ offset_left = 18.0
 offset_top = 16.0
 offset_right = 270.0
 offset_bottom = 46.0
-theme_override_fonts/font = ExtResource("11_yhp7u")
+theme_override_fonts/font = ExtResource("13_m1a57")
 theme_override_font_sizes/font_size = 5
 text = "..."
 autowrap_mode = 2
@@ -3845,25 +3772,76 @@ layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
 
+[node name="Interactibles" type="Node2D" parent="."]
+
+[node name="Run1" type="Node2D" parent="Interactibles"]
+visible = false
+
+[node name="Image1" parent="Interactibles/Run1" instance=ExtResource("14_hxerf")]
+position = Vector2(171.212, 56.2979)
+
+[node name="Bookshelf" type="Area2D" parent="Interactibles/Run1"]
+script = ExtResource("15_kgpq2")
+message = "Some of the spines on these books look worn out."
+item_scene = ExtResource("16_x60kh")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run1/Bookshelf"]
+position = Vector2(104.389, 90)
+scale = Vector2(0.622108, 1.04778)
+shape = SubResource("RectangleShape2D_28sj3")
+
+[node name="Clock" type="Area2D" parent="Interactibles/Run1"]
+script = ExtResource("15_kgpq2")
+message = "The clock arrows point to 14:35."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run1/Clock"]
+position = Vector2(256.5, 90)
+shape = SubResource("RectangleShape2D_nfer3")
+
+[node name="Run2" type="Node2D" parent="Interactibles"]
+
+[node name="Clock" type="Area2D" parent="Interactibles/Run2"]
+script = ExtResource("15_kgpq2")
+message = "It is stll pointing at 14:35... wierd."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run2/Clock"]
+position = Vector2(256.5, 88)
+shape = SubResource("RectangleShape2D_xj5cs")
+
+[node name="Smallbookcase" type="Area2D" parent="Interactibles/Run2"]
+script = ExtResource("15_kgpq2")
+message = "There is nothing here but medical books."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run2/Smallbookcase"]
+position = Vector2(192, 88)
+shape = SubResource("RectangleShape2D_cyf4s")
+
+[node name="Recordplayer" type="Area2D" parent="Interactibles/Run2"]
+script = ExtResource("15_kgpq2")
+message = "Huh? There is only one record, It's a loop of soudns of a hospital room."
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run2/Recordplayer"]
+position = Vector2(400, 88)
+shape = SubResource("RectangleShape2D_8rwjc")
+
+[node name="DogBed" type="Area2D" parent="Interactibles/Run2"]
+script = ExtResource("15_kgpq2")
+message = "You feel a pang of sadness but don't know why."
+item_scene = ExtResource("17_ef26l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run2/DogBed"]
+position = Vector2(592.5, 90.5)
+shape = SubResource("RectangleShape2D_yrr1l")
+
+[node name="Run3" type="Node2D" parent="Interactibles"]
+
+[node name="Mirror" type="Area2D" parent="Interactibles/Run3"]
+
 [node name="TEMP" type="Node2D" parent="."]
-position = Vector2(375, 61)
+position = Vector2(103, 73)
 
 [connection signal="body_entered" from="Triggers/Entrance" to="Triggers/Entrance" method="_on_entrance_body_entered"]
 [connection signal="body_entered" from="Triggers/Exit" to="Triggers/Exit" method="_on_body_entered"]
 [connection signal="body_exited" from="Triggers/Exit" to="Triggers/Exit" method="_on_body_exited"]
 [connection signal="body_entered" from="Triggers/Stairs" to="Triggers/Stairs" method="_on_body_entered"]
 [connection signal="body_exited" from="Triggers/Stairs" to="Triggers/Stairs" method="_on_body_exited"]
-[connection signal="body_entered" from="Interactibles/bookshelf1" to="Interactibles/bookshelf1" method="_on_body_entered"]
-[connection signal="body_exited" from="Interactibles/bookshelf1" to="Interactibles/bookshelf1" method="_on_body_exited"]
-[connection signal="body_entered" from="Interactibles/clock1" to="Interactibles/clock1" method="_on_body_entered"]
-[connection signal="body_exited" from="Interactibles/clock1" to="Interactibles/clock1" method="_on_body_exited"]
-[connection signal="body_entered" from="Interactibles/recordplayer1" to="Interactibles/recordplayer1" method="_on_body_entered"]
-[connection signal="body_exited" from="Interactibles/recordplayer1" to="Interactibles/recordplayer1" method="_on_body_exited"]
-[connection signal="body_entered" from="Interactibles/pot1" to="Interactibles/pot1" method="_on_body_entered"]
-[connection signal="body_exited" from="Interactibles/pot1" to="Interactibles/pot1" method="_on_body_exited"]
-[connection signal="body_entered" from="Interactibles/dogbed1" to="Interactibles/dogbed1" method="_on_body_entered"]
-[connection signal="body_exited" from="Interactibles/dogbed1" to="Interactibles/dogbed1" method="_on_body_exited"]
-[connection signal="body_entered" from="Interactibles/pot2" to="Interactibles/pot2" method="_on_body_entered"]
-[connection signal="body_exited" from="Interactibles/pot2" to="Interactibles/pot2" method="_on_body_exited"]
-[connection signal="body_entered" from="Interactibles/image1" to="Interactibles/image1" method="_on_body_entered"]
-[connection signal="body_exited" from="Interactibles/image1" to="Interactibles/image1" method="_on_body_exited"]

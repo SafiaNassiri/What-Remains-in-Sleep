@@ -2,6 +2,8 @@
 extends CharacterBody2D
 
 const Item = preload("res://scripts/item.gd")
+const Interactable = preload("res://scripts/Interactable.gd")
+
 
 @export var speed := 150
 
@@ -11,8 +13,8 @@ var last_direction := "down"
 
 var current_interactable_node: Node = null
 var interactables_in_range: Array[Node] = []
+var can_interact := true
 
-var stairs_node: Node
 var ui: Node = null
 
 func _physics_process(delta: float) -> void:
@@ -58,14 +60,19 @@ func _set_animation(anim: String) -> void:
 
 # Area2D Signals
 func _on_area_2d_area_entered(area: Area2D) -> void:
-	if area is Item:
-		interactables_in_range.append(area)
-		update_current_interactable()
+	var node = area
+	# If the area is part of an item or interactable, detect accordingly:
+	if node is Item or node is Interactable:
+		if not interactables_in_range.has(node):
+			interactables_in_range.append(node)
+			update_current_interactable()
 
 func _on_area_2d_area_exited(area: Area2D) -> void:
-	if area is Item:
-		interactables_in_range.erase(area)
+	var node = area
+	if node is Item or node is Interactable:
+		interactables_in_range.erase(node)
 		update_current_interactable()
+
 
 func update_current_interactable() -> void:
 	# Optionally prioritize by distance
@@ -80,10 +87,25 @@ func update_current_interactable() -> void:
 				current_interactable_node = item
 				shortest_distance = dist
 
+func collect_item(item):
+	if item.name not in get_tree().current_scene.collected_items:
+		get_tree().current_scene.collected_items.append(item)
+		print("Collected item:", item.name)
+
+		if ui and ui.has_method("add_item_to_display"):
+			var sprite = item.get_node_or_null("Sprite2D")
+			if sprite:
+				ui.add_item_to_display(sprite) 
+
 # Interaction handling
 func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("ui_accept"):
-		if current_interactable_node:
-			print("Calling handle_interaction on:", current_interactable_node)
-			if current_interactable_node.has_method("handle_interaction"):
-				await current_interactable_node.handle_interaction(self)
+	if ui and ui.is_message_active:
+		return  # block interaction while message is active
+
+	if Input.is_action_just_pressed("ui_accept") and can_interact:
+		if current_interactable_node and current_interactable_node.has_method("handle_interaction"):
+			can_interact = false
+			await current_interactable_node.handle_interaction(self)
+			# Add a small delay after interaction ends
+			await get_tree().create_timer(0.2).timeout
+			can_interact = true
