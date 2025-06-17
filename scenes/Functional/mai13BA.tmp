@@ -14,7 +14,6 @@
 [ext_resource type="Script" path="res://scripts/ui.gd" id="12_ydlfi"]
 [ext_resource type="FontFile" uid="uid://c2djd2tlipli4" path="res://fonts/QuinqueFive_Font_1_15/QuinqueFive.ttf" id="13_m1a57"]
 [ext_resource type="PackedScene" uid="uid://btufn1iemn5kd" path="res://scenes/Items/Image1.tscn" id="14_hxerf"]
-[ext_resource type="Script" path="res://scripts/Interactable.gd" id="15_kgpq2"]
 [ext_resource type="PackedScene" uid="uid://ckl86g7x8sgwh" path="res://scenes/Items/Book1.tscn" id="16_x60kh"]
 [ext_resource type="PackedScene" uid="uid://ba8feogl7s5q5" path="res://scenes/Items/Dogtoy.tscn" id="17_ef26l"]
 
@@ -3616,8 +3615,47 @@ corner_radius_top_right = 10
 corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 
+[sub_resource type="GDScript" id="GDScript_ky3yw"]
+script/source = "# interactable.gd
+extends Area2D
+
+@export var interaction_message: String = \"Press [E] to interact.\"
+@export var message: String = \"\"
+@export var item_scene: PackedScene  # Optional: item to spawn
+@export var spawn_offset: Vector2 = Vector2(0, 16)  # Relative to this node
+@export var spawn_global_position: Vector2 = Vector2.ZERO  # Absolute position to spawn item; if Vector2.ZERO, use offset
+
+signal interacted(item_spawned)
+
+func _ready():
+	set_monitoring(true)
+	set_monitorable(true)
+
+func handle_interaction(player) -> void:
+	# Show message if there is one
+	if interaction_message != \"\":
+		await player.ui.show_message([interaction_message])
+	if message != \"\":
+		await player.ui.show_message([message])
+
+	var spawned_item: Node = null
+
+	# Spawn item if set
+	if item_scene:
+		spawned_item = item_scene.instantiate()
+		get_parent().add_child(spawned_item)
+
+		if spawn_global_position != Vector2.ZERO:
+			spawned_item.global_position = spawn_global_position
+		else:
+			spawned_item.global_position = global_position + spawn_offset
+
+	# Emit signal with the spawned item (or null)
+	emit_signal(\"interacted\", spawned_item)
+"
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_28sj3"]
-size = Vector2(72.6901, 20)
+size = Vector2(72.6901, 16.6808)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_nfer3"]
 size = Vector2(19, 20)
@@ -3626,7 +3664,7 @@ size = Vector2(19, 20)
 size = Vector2(19, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_cyf4s"]
-size = Vector2(30, 20)
+size = Vector2(26, 20)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_8rwjc"]
 size = Vector2(30, 20)
@@ -3779,18 +3817,18 @@ size_flags_vertical = 4
 position = Vector2(171.212, 56.2979)
 
 [node name="Bookshelf" type="Area2D" parent="Interactibles/Run1"]
-script = ExtResource("15_kgpq2")
+script = SubResource("GDScript_ky3yw")
 message = "Some of the spines on these books look worn out."
 item_scene = ExtResource("16_x60kh")
 spawn_global_position = Vector2(122, 106)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run1/Bookshelf"]
-position = Vector2(104.389, 90)
+position = Vector2(104.389, 88.2611)
 scale = Vector2(0.622108, 1.04778)
 shape = SubResource("RectangleShape2D_28sj3")
 
 [node name="Clock" type="Area2D" parent="Interactibles/Run1"]
-script = ExtResource("15_kgpq2")
+script = SubResource("GDScript_ky3yw")
 message = "The clock arrows point to 14:35."
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run1/Clock"]
@@ -3798,10 +3836,9 @@ position = Vector2(256.5, 90)
 shape = SubResource("RectangleShape2D_nfer3")
 
 [node name="Run2" type="Node2D" parent="Interactibles"]
-visible = false
 
 [node name="Clock" type="Area2D" parent="Interactibles/Run2"]
-script = ExtResource("15_kgpq2")
+script = SubResource("GDScript_ky3yw")
 message = "It is stll pointing at 14:35... wierd."
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run2/Clock"]
@@ -3809,7 +3846,7 @@ position = Vector2(256.5, 88)
 shape = SubResource("RectangleShape2D_xj5cs")
 
 [node name="Smallbookcase" type="Area2D" parent="Interactibles/Run2"]
-script = ExtResource("15_kgpq2")
+script = SubResource("GDScript_ky3yw")
 message = "There is nothing here but medical books."
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run2/Smallbookcase"]
@@ -3817,7 +3854,7 @@ position = Vector2(192, 88)
 shape = SubResource("RectangleShape2D_cyf4s")
 
 [node name="Recordplayer" type="Area2D" parent="Interactibles/Run2"]
-script = ExtResource("15_kgpq2")
+script = SubResource("GDScript_ky3yw")
 message = "Huh? There is only one record, It's a loop of soudns of a hospital room."
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Interactibles/Run2/Recordplayer"]
@@ -3825,7 +3862,7 @@ position = Vector2(400, 88)
 shape = SubResource("RectangleShape2D_8rwjc")
 
 [node name="DogBed" type="Area2D" parent="Interactibles/Run2"]
-script = ExtResource("15_kgpq2")
+script = SubResource("GDScript_ky3yw")
 message = "You feel a pang of sadness but don't know why."
 item_scene = ExtResource("17_ef26l")
 

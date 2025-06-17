@@ -1,26 +1,28 @@
-# item.gd
-extends Node2D
+extends Area2D
 
-@export var interaction_message: String = "Press [E] to pick up."
-@export var lore_text: String = ""
+@export var item_id: String = ""
+@export var item_name: String
+@export var icon_texture: AtlasTexture  # use AtlasTexture instead of plain Texture2D
+@export var lore_text: Array[String] = []
+@export var is_secret: bool = false
 
-@onready var icon_texture: Texture2D = $Sprite2D.texture
+var collected := false
 
-signal interacted
+func _ready():
+	add_to_group("items")
+	
+	# If you want to update the sprite in the scene with the atlas texture:
+	var sprite = $Sprite2D
+	if sprite and icon_texture:
+		sprite.texture = icon_texture
 
-func handle_interaction(player) -> void:
-	if interaction_message != "":
-		await player.ui.show_message([interaction_message])
+func handle_interaction(player: Node) -> void:
+	if collected:
+		return
+	collected = true
 
-	if lore_text != "":
-		await player.ui.show_message([lore_text])
+	if lore_text.size() > 0:
+		await player.ui.show_message(lore_text)
 
-	if player.has_method("collect_item"):
-		player.collect_item(self)
-
-	# Tell player you're no longer interactable before freeing
-	if player.current_interactable_node == self:
-		player.current_interactable_node = null
-		player.interactables_in_range.erase(self)
-
-	queue_free()
+	player.collect_item(self)
+	queue_free()  # Remove item from world

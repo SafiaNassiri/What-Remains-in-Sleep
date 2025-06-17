@@ -9,61 +9,70 @@ extends Node2D
 # --- Game State ---
 var current_run := 1
 var max_runs := 3
-
-# Track collected items this run
-var collected_items := []
+var unlocked_items: Array[String] = []
+var collected_items: Array[String] = []
+var unlocked_secrets: Array[String] = []
+var interacted_secret_lore: Array[String] = []
 
 # --- Scene Setup ---
 func _ready() -> void:
 	player.ui = ui
 	player.movement_locked = true
 
-	fade_rect.color = Color(0, 0, 0, 1)  # fully black at start
+	if has_node("Interactables"):
+		_update_run_visibility()
+	else:
+		push_error("Missing node: 'Interactables'. Check your scene hierarchy.")
+
+	fade_rect.color = Color(0, 0, 0, 1)
 	fade_rect.visible = true
 	await fade_in_screen(1.0)
 
+	_connect_lore_objects()
+	
 	exit_trigger.main_node = self
 
-	# Connect interactable signals for items already in scene
-	_connect_interactables()
-
 	await _intro_messages()
-
 	player.movement_locked = false
 
-# --- Connect all interactables in the scene to handle their signals ---
-func _connect_interactables() -> void:
-	var current_run_node = $Interactibles.get_child(current_run - 1)
-	if current_run_node == null:
-		return
-
-	var target = Callable(self, "_on_interactable_interacted")
-
-	for node in current_run_node.get_children():
-		if node.has_signal("interacted") and not node.is_connected("interacted", target):
-			node.connect("interacted", target)
-
 func _update_run_visibility() -> void:
-	var runs = $Interactibles.get_children()
+	var runs = $Interactables.get_children()
 	for run_node in runs:
 		run_node.visible = false
 		run_node.set_process(false)
+		# Disable interaction (e.g., disable collision and signals)
+		_disable_interaction(run_node)
 	
 	if current_run <= runs.size():
-		var current_run_node = runs[current_run - 1]  # runs is array of Run1, Run2, Run3 nodes
+		var current_run_node = runs[current_run - 1]
 		current_run_node.visible = true
 		current_run_node.set_process(true)
+		_enable_interaction(current_run_node)
 
-# Called when an interactable or item emits the interacted signal
-func _on_interactable_interacted(item) -> void:
-	if item != null and item.has_method("get_name"):
-		var item_name = item.get_name()
-		if item not in collected_items:
-			collected_items.append(item)
-			# Optionally log or update UI here
-			print("Collected item:", item_name)
-			# Maybe update UI, inventory, etc.
-	# You can add other game logic here for interaction effects
+# Recursively disable interactions
+func _disable_interaction(run_node: Node) -> void:
+	_set_interaction_enabled(run_node, false)
+
+# Recursively enable interactions
+func _enable_interaction(run_node: Node) -> void:
+	_set_interaction_enabled(run_node, true)
+
+func _set_interaction_enabled(node: Node, enabled: bool) -> void:
+	if node is Area2D:
+		node.set_monitoring(enabled)
+
+		# Disable all CollisionShape2D children
+		for shape in node.get_children():
+			if shape is CollisionShape2D:
+				shape.disabled = not enabled
+
+	# If your interactables have a method like this, call it too
+	if node.has_method("set_interactable_enabled"):
+		node.set_interactable_enabled(enabled)
+
+	# Recursively check children (e.g. in case there are nested nodes)
+	for child in node.get_children():
+		_set_interaction_enabled(child, enabled)
 
 # --- Intro ---
 func _intro_messages() -> void:
@@ -79,16 +88,19 @@ func next_run() -> void:
 	current_run += 1
 	player.movement_locked = true
 
+	if current_run > max_runs:
+		await fade_out_screen(1.0)
+		var ending = get_ending()
+		trigger_ending(ending)
+		return
+
 	await fade_out_screen(1.0)
 
-	# Reset player position
 	player.global_position = Vector2(26, 133)
-	collected_items.clear() # reset collected items on new run
-
 	exit_trigger.reset_interaction()
 
 	_update_run_visibility()
-	_connect_interactables()
+	_connect_lore_objects()
 
 	await fade_in_screen(1.0)
 	player.movement_locked = false
@@ -101,33 +113,122 @@ func end_game() -> void:
 
 # --- Ending Calculation ---
 func get_ending() -> String:
-	# Example: check items for secret ending
-	for item in collected_items:
-		if item.name == "SecretMemory":
-			return "secret"
-	if collected_items.size() == 0:
-		return "dumb"
-	# Default neutral
-	return "neutral"
+	var total_memories := get_total_memory_count()
+	var total_secret_memories := get_total_secret_memory_count()
+	
+	var collected_non_secret := 0
+	for id in unlocked_items:
+		if id not in unlocked_secrets:
+			collected_non_secret += 1
+	
+	var collected_secret := unlocked_secrets.size()
+	var secret_interacted := interacted_secret_lore.size()
+	
+	print("DEBUG: total_memories = %d" % total_memories)
+	print("DEBUG: total_secret_memories = %d" % total_secret_memories)
+	print("DEBUG: collected_non_secret = %d" % collected_non_secret)
+	print("DEBUG: collected_secret = %d" % collected_secret)
+	print("DEBUG: secret_interacted = %d" % secret_interacted)
+
+	if collected_non_secret == 0:
+		return "void"
+	
+	# Check secretPlus ending first
+	if collected_non_secret == (total_memories - total_secret_memories) and \
+		collected_secret == total_secret_memories and \
+		secret_interacted == total_secret_memories:
+		return "secretPlus"
+	
+	# Check secret ending (all secrets and non-secrets collected, but maybe not all secret lore interacted)
+	if collected_non_secret == (total_memories - total_secret_memories) and \
+		collected_secret == total_secret_memories:
+		return "secret"
+	
+	# Check waking (all non-secret memories collected)
+	if collected_non_secret == (total_memories - total_secret_memories):
+		return "waking"
+	
+	# Else fading (some collected)
+	return "fading"
+
+func get_total_memory_count() -> int:
+	var total := 0
+	for run in $Interactables.get_children():
+		for node in run.get_children():
+			if node.is_in_group("lore_objects"):
+				total += 1
+	return total
+
+func get_total_secret_memory_count() -> int:
+	var total := 0
+	for run in $Interactables.get_children():
+		for node in run.get_children():
+			if node.is_in_group("lore_objects") and node.is_secret:
+				total += 1
+	return total
 
 func trigger_ending(ending: String) -> void:
 	player.movement_locked = true
+	print("DEBUG: Triggering ending: %s" % ending)
 
 	match ending:
 		"secret":
 			await fade_out_screen(1.0)
-			await ui.show_message(["Secret Ending Unlocked!"])
-		"bad":
+			await ui.show_message(["You remembered *everything.* Even what was hidden."])
+			await ui.show_message(["The dream breaks open into something *more.*"])
+		"waking":
 			await fade_out_screen(1.0)
-			await ui.show_message(["Bad Ending..."])
-		"neutral":
+			await ui.show_message(["You remember the faces, the places, the feelings."])
+			await ui.show_message(["You wake up whole."])
+		"fading":
 			await fade_out_screen(1.0)
-			await ui.show_message(["Neutral Ending. You wake up, memories fading..."])
-		"dumb":
+			await ui.show_message(["You remember something... but not all."])
+			await ui.show_message(["You wake up, but it feels unfinished."])
+		"void":
 			await fade_out_screen(1.0)
-			await ui.show_message(["You didn't collect anything... Maybe try again."])
+			await ui.show_message(["You wake up... with nothing."])
+			await ui.show_message(["Empty. Lost. Again."])
 
 	get_tree().change_scene_to_file("res://scenes/Menus/GameOver.tscn")
+
+func _connect_lore_objects() -> void:
+	if not has_node("Interactables"):
+		push_error("Missing node: 'Interactables'")
+		return
+	
+	var interactables = $Interactables
+	if current_run - 1 >= interactables.get_child_count():
+		push_error("Current run index is out of bounds.")
+		return
+
+	var current_run_node = interactables.get_child(current_run - 1)
+	if current_run_node == null:
+		return
+
+	for node in current_run_node.get_children():
+		if node.is_in_group("lore_objects"):
+			if not node.is_connected("interacted", Callable(self, "_on_lore_object_interacted")):
+				node.connect("interacted", Callable(self, "_on_lore_object_interacted"))
+
+func _on_lore_object_interacted(source_node: Node) -> void:
+	if not source_node or not source_node.has_method("get_lore_id"):
+		return
+
+	var lore_id = source_node.get_lore_id()
+	if lore_id in unlocked_items:
+		return  # already unlocked
+
+	unlocked_items.append(lore_id)
+	print("DEBUG: Unlocked lore item: %s" % lore_id)
+
+	# Directly access the exported property
+	if source_node.is_secret:
+		unlocked_secrets.append(lore_id)
+		if lore_id not in interacted_secret_lore:
+			interacted_secret_lore.append(lore_id)
+
+	var lore_text = source_node.get_lore_text()
+	await ui.show_message(lore_text)
 
 # --- Screen Fade In/Out ---
 func fade_out_screen(duration := 1.0) -> void:

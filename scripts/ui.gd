@@ -1,4 +1,3 @@
-#ui.gd
 extends CanvasLayer
 
 signal typing_done
@@ -13,9 +12,15 @@ signal message_closed
 var full_text := ""
 var char_index := 0
 var typing_speed := 0.03
-var typing_timer: Timer = null
+var typing_timer: Timer
 var is_typing := false
 var is_message_active := false
+
+func _ready() -> void:
+	typing_timer = Timer.new()
+	typing_timer.one_shot = false
+	add_child(typing_timer)
+	typing_timer.timeout.connect(_on_typing_timer_timeout)
 
 func show_message(pages: Array) -> void:
 	if typeof(pages) == TYPE_STRING:
@@ -25,33 +30,27 @@ func show_message(pages: Array) -> void:
 	panel.visible = true
 
 	for page in pages:
-		full_text = page
-		char_index = 0
-		label.text = ""
-		is_typing = true
-
-		if typing_timer:
-			typing_timer.queue_free()
-
-		typing_timer = Timer.new()
-		typing_timer.wait_time = typing_speed
-		typing_timer.one_shot = false
-		typing_timer.timeout.connect(_on_typing_timer_timeout)
-		add_child(typing_timer)
-		typing_timer.start()
-
+		_start_typing(page)
 		while is_typing:
 			await get_tree().process_frame
 			if Input.is_action_just_pressed("ui_accept"):
 				label.text = full_text
 				is_typing = false
-				if typing_timer:
-					typing_timer.stop()
+				typing_timer.stop()
 				emit_signal("typing_done")
-		
+
 		await _wait_for_input("ui_accept")
+
 	_clear_message()
 	emit_signal("message_closed")
+
+func _start_typing(text: String) -> void:
+	full_text = text
+	char_index = 0
+	label.text = ""
+	is_typing = true
+	typing_timer.wait_time = typing_speed
+	typing_timer.start()
 
 func _on_typing_timer_timeout() -> void:
 	if char_index < full_text.length():
@@ -71,30 +70,18 @@ func _clear_message() -> void:
 	panel.visible = false
 	is_message_active = false
 	label.text = ""
-	if typing_timer:
-		typing_timer.queue_free()
-		typing_timer = null
+	typing_timer.stop()
 
-func add_item_to_display(sprite: Sprite2D) -> void:
+func add_item_to_display(texture: Texture2D) -> void:
+	if not texture:
+		push_warning("add_item_to_display received null texture")
+		return
+
 	if not item_panel.visible:
 		item_panel.visible = true
-	
+
 	var icon = TextureRect.new()
-	
-	if sprite.region_enabled:
-		var atlas_tex = AtlasTexture.new()
-		atlas_tex.atlas = sprite.texture
-		atlas_tex.region = sprite.region_rect
-		icon.texture = atlas_tex
-	else:
-		icon.texture = sprite.texture
-	
-	icon.stretch_mode = TextureRect.STRETCH_KEEP  # show texture at native size, no scaling
-	
-	# Set the size of TextureRect
-	if sprite.region_enabled:
-		icon.size = sprite.region_rect.size
-	else:
-		icon.size = sprite.texture.get_size()
-	
+	icon.texture = texture
+	icon.stretch_mode = TextureRect.STRETCH_KEEP
+	icon.size = texture.get_size()
 	item_display.add_child(icon)

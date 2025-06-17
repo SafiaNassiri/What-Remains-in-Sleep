@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://bhsra5ixt2xrt"]
+
+[ext_resource type="Script" path="res://scripts/lore_object.gd" id="1_2wwec"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_onlaj"]
+
+[node name="LoreObject" type="Area2D" groups=["lore_objects"]]
+script = ExtResource("1_2wwec")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_onlaj")

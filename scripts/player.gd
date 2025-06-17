@@ -1,10 +1,6 @@
 # player.gd
 extends CharacterBody2D
 
-const Item = preload("res://scripts/item.gd")
-const Interactable = preload("res://scripts/Interactable.gd")
-
-
 @export var speed := 150
 
 var movement_locked := false
@@ -60,42 +56,47 @@ func _set_animation(anim: String) -> void:
 
 # Area2D Signals
 func _on_area_2d_area_entered(area: Area2D) -> void:
-	var node = area
-	# If the area is part of an item or interactable, detect accordingly:
-	if node is Item or node is Interactable:
-		if not interactables_in_range.has(node):
-			interactables_in_range.append(node)
+	if area.is_in_group("items") or area.is_in_group("lore_objects"):
+		if not interactables_in_range.has(area):
+			interactables_in_range.append(area)
 			update_current_interactable()
 
 func _on_area_2d_area_exited(area: Area2D) -> void:
-	var node = area
-	if node is Item or node is Interactable:
-		interactables_in_range.erase(node)
+	if area.is_in_group("items") or area.is_in_group("lore_objects"):
+		interactables_in_range.erase(area)
 		update_current_interactable()
 
-
 func update_current_interactable() -> void:
-	# Optionally prioritize by distance
-	if interactables_in_range.is_empty():
+	if interactables_in_range.size() == 0:
 		current_interactable_node = null
-	else:
-		current_interactable_node = interactables_in_range[0]
-		var shortest_distance = position.distance_to(current_interactable_node.position)
-		for item in interactables_in_range:
-			var dist = position.distance_to(item.position)
-			if dist < shortest_distance:
-				current_interactable_node = item
-				shortest_distance = dist
+		return
+
+	var shortest_distance = position.distance_to(interactables_in_range[0].position)
+	current_interactable_node = interactables_in_range[0]
+
+	for item in interactables_in_range:
+		var dist = position.distance_to(item.position)
+		if dist < shortest_distance:
+			shortest_distance = dist
+			current_interactable_node = item
 
 func collect_item(item):
-	if item.name not in get_tree().current_scene.collected_items:
-		get_tree().current_scene.collected_items.append(item)
-		print("Collected item:", item.name)
+	if item.item_id not in get_tree().current_scene.collected_items:
+		get_tree().current_scene.collected_items.append(item.item_id)
+		print("DEBUG: Collected item:", item.item_id)
+
+		if item.is_secret:
+			if item.item_id not in get_tree().current_scene.unlocked_secrets:
+				get_tree().current_scene.unlocked_secrets.append(item.item_id)
+				print("DEBUG: Collected secret item:", item.item_id)
+
+		print("DEBUG: Current collected_items array:", get_tree().current_scene.collected_items)
+		print("DEBUG: Current unlocked_secrets array:", get_tree().current_scene.unlocked_secrets)
 
 		if ui and ui.has_method("add_item_to_display"):
-			var sprite = item.get_node_or_null("Sprite2D")
-			if sprite:
-				ui.add_item_to_display(sprite) 
+			ui.add_item_to_display(item.icon_texture)
+	else:
+		print("DEBUG: Item already collected:", item.item_id)
 
 # Interaction handling
 func _process(_delta: float) -> void:
@@ -107,5 +108,6 @@ func _process(_delta: float) -> void:
 			can_interact = false
 			await current_interactable_node.handle_interaction(self)
 			# Add a small delay after interaction ends
-			await get_tree().create_timer(0.2).timeout
+			if is_inside_tree() and get_tree():
+				await get_tree().create_timer(0.2).timeout
 			can_interact = true
