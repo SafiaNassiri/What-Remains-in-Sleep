@@ -2,6 +2,11 @@ extends Node2D
 
 @onready var main_menu = $CenterContainer/VBoxContainer
 @onready var controls_panel = $CenterContainer/ControlsPanel
+@onready var music_player = $music_player
+
+func _ready():
+	music_player.stream = load("res://Audio/music/EndGame.wav")
+	music_player.play()
 
 func _on_start_pressed():
 	get_tree().change_scene_to_file("res://scenes/Menus/main.tscn")

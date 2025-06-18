@@ -3,6 +3,8 @@ extends CharacterBody2D
 
 @export var speed := 150
 
+@onready var sfx_player = $sfx_player
+
 var movement_locked := false
 var direction := Vector2.ZERO
 var last_direction := "down"
@@ -85,6 +87,14 @@ func collect_item(item):
 		get_tree().current_scene.collected_items.append(item.item_id)
 		print("DEBUG: Collected item:", item.item_id)
 
+		play_item_collect_sound()
+
+		if item.is_secret:
+			GlobalProgress.add_progress(0, 1, 0, 0)
+		else:
+			GlobalProgress.add_progress(1, 0, 0, 0)
+		print("DEBUG: Progress updated in GlobalProgress.")
+
 		if item.is_secret:
 			if item.item_id not in get_tree().current_scene.unlocked_secrets:
 				get_tree().current_scene.unlocked_secrets.append(item.item_id)
@@ -111,3 +121,7 @@ func _process(_delta: float) -> void:
 			if is_inside_tree() and get_tree():
 				await get_tree().create_timer(0.2).timeout
 			can_interact = true
+
+func play_item_collect_sound():
+	sfx_player.stream = load("res://Audio/sounds/Item collect.wav")
+	sfx_player.play()

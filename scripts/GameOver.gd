@@ -1,5 +1,11 @@
 extends Node2D
 
+@onready var music_player = $music_player
+
+func _ready():
+	music_player.stream = load("res://Audio/music/EndGame.wav")
+	music_player.play()
+
 func _on_retry_pressed():
 	get_tree().change_scene_to_file("res://scenes/Menus/main.tscn")
 	

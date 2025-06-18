@@ -84,6 +84,9 @@ offset_right = 139.0
 offset_bottom = 90.0
 text = "<---"
 
+[node name="music_player" type="AudioStreamPlayer2D" parent="."]
+attenuation = 0.307786
+
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Controls" to="." method="_on_controls_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]

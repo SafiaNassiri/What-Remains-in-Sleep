@@ -8,6 +8,7 @@ signal message_closed
 @onready var label = $Panel/Label
 @onready var item_panel = $Panel2
 @onready var item_display = $Panel2/CenterContainer/ItemDisplay
+@onready var ui_sfx_player = $UISFXPlayer
 
 var full_text := ""
 var char_index := 0
@@ -23,6 +24,9 @@ func _ready() -> void:
 	typing_timer.timeout.connect(_on_typing_timer_timeout)
 
 func show_message(pages: Array) -> void:
+	ui_sfx_player.stream = load("res://Audio/sounds/ui.wav")
+	ui_sfx_player.play()
+	
 	if typeof(pages) == TYPE_STRING:
 		pages = [pages]
 
@@ -40,7 +44,8 @@ func show_message(pages: Array) -> void:
 				emit_signal("typing_done")
 
 		await _wait_for_input("ui_accept")
-
+		ui_sfx_player.play()
+		
 	_clear_message()
 	emit_signal("message_closed")
 

@@ -718,5 +718,7 @@ sprite_frames = SubResource("SpriteFrames_pxuqu")
 animation = &"death-down"
 autoplay = "idle-side"
 
+[node name="sfx_player" type="AudioStreamPlayer2D" parent="."]
+
 [connection signal="area_entered" from="Area2D" to="." method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Area2D" to="." method="_on_area_2d_area_exited"]
