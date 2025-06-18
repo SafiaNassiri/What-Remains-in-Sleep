@@ -39,9 +39,8 @@ Unzi the folder and run the executable (currently only Windows is available).
 ## TODO
 
 - [x] Add end sequence once all memory items are collected
-- [ ] Audio feedback (ambience, item SFX, music)
+- [x] Audio feedback (ambience, item SFX, music)
 - [ ] Full memory log screen
-- [ ] Implement 5-minute run timer (loop resets on failure)
 
 ---
 
