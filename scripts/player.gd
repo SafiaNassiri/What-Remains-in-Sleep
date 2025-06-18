@@ -85,7 +85,7 @@ func update_current_interactable() -> void:
 func collect_item(item):
 	if item.item_id not in get_tree().current_scene.collected_items:
 		get_tree().current_scene.collected_items.append(item.item_id)
-		print("DEBUG: Collected item:", item.item_id)
+		#print("DEBUG: Collected item:", item.item_id)
 
 		play_item_collect_sound()
 
@@ -98,10 +98,10 @@ func collect_item(item):
 		if item.is_secret:
 			if item.item_id not in get_tree().current_scene.unlocked_secrets:
 				get_tree().current_scene.unlocked_secrets.append(item.item_id)
-				print("DEBUG: Collected secret item:", item.item_id)
+				#print("DEBUG: Collected secret item:", item.item_id)
 
-		print("DEBUG: Current collected_items array:", get_tree().current_scene.collected_items)
-		print("DEBUG: Current unlocked_secrets array:", get_tree().current_scene.unlocked_secrets)
+		#print("DEBUG: Current collected_items array:", get_tree().current_scene.collected_items)
+		#print("DEBUG: Current unlocked_secrets array:", get_tree().current_scene.unlocked_secrets)
 
 		if ui and ui.has_method("add_item_to_display"):
 			ui.add_item_to_display(item.icon_texture)

@@ -9,6 +9,8 @@ signal message_closed
 @onready var item_panel = $Panel2
 @onready var item_display = $Panel2/CenterContainer/ItemDisplay
 @onready var ui_sfx_player = $UISFXPlayer
+@onready var fade_rect = $FadeRect
+@onready var fade_sfx_player = $fade_sfx_player
 
 var full_text := ""
 var char_index := 0
@@ -90,3 +92,28 @@ func add_item_to_display(texture: Texture2D) -> void:
 	icon.stretch_mode = TextureRect.STRETCH_KEEP
 	icon.size = texture.get_size()
 	item_display.add_child(icon)
+
+func fade_out_screen(duration := 1.0) -> void:
+	#var fade_sfx = load("res://Audio/sounds/choirfade.wav") as AudioStream
+	#if fade_sfx:
+	#	fade_sfx_player.stream = fade_sfx
+	#	fade_sfx_player.play()
+
+	fade_rect.color.a = 0.0
+	fade_rect.visible = true
+	var tween := create_tween()
+	tween.tween_property(fade_rect, "color:a", 1.0, duration)
+	await tween.finished
+
+func fade_in_screen(duration := 1.0) -> void:
+	#var fade_sfx = load("res://Audio/sounds/choirfadeR.wav") as AudioStream
+	#if fade_sfx:
+	#	fade_sfx_player.stream = fade_sfx
+	#	fade_sfx_player.play()
+
+	fade_rect.color.a = 1.0
+	fade_rect.visible = true
+	var tween := create_tween()
+	tween.tween_property(fade_rect, "color:a", 0.0, duration)
+	await tween.finished
+	fade_rect.visible = false

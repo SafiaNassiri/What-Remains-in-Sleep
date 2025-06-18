@@ -3758,6 +3758,8 @@ size_flags_vertical = 4
 [node name="UISFXPlayer" type="AudioStreamPlayer2D" parent="UI"]
 volume_db = -10.0
 
+[node name="fade_sfx_player" type="AudioStreamPlayer2D" parent="UI"]
+
 [node name="Interactables" type="Node2D" parent="."]
 
 [node name="Run1" type="Node2D" parent="Interactables"]
@@ -3815,8 +3817,6 @@ volume_db = -15.0
 attenuation = 0.307786
 
 [node name="sfx_player" type="AudioStreamPlayer2D" parent="."]
-
-[node name="fade_sfx_player" type="AudioStreamPlayer2D" parent="."]
 
 [connection signal="body_entered" from="Triggers/Entrance" to="Triggers/Entrance" method="_on_entrance_body_entered"]
 [connection signal="body_entered" from="Triggers/Exit" to="Triggers/Exit" method="_on_body_entered"]
