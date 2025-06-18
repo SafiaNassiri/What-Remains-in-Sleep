@@ -7,7 +7,7 @@
 In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, looping memory. Explore a haunted interior space where each run reveals more about your past. Interact with objects to uncover memory fragments, collect hidden items, and piece together the story before the loop resets again.
 
 - **Memory-driven exploration**: Pick up items tied to emotional memories.
-- **Loop mechanic**: The environment changes subtly with each loop.
+- **Loop mechanic**: The environment changes subtly with each loop. There are 3 loops total.
 - **Dark narrative**: Each clue brings you closer to the truth — and the tragedy.
 - **Environmental storytelling**: Some objects only whisper to you. Others offer tangible fragments of the past.
 
@@ -21,23 +21,19 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 ---
 
-## Development
+## How To Play
 
-- Built with [Godot Engine](https://godotengine.org/)  
-- Art assets: Top-down pixel tileset from itch.io 
-- SFX / Music: TBD
+Download the zip file of the game.
+Unzi the folder and run the executable (currently only Windows is available).
 
 ---
 
-## Features
+## Development
 
-- Object interactions that either:
-  - Display a cryptic message (`interact_type = "message"`)
-  - Reveal hidden collectible items (`interact_type = "reveal_item"`)
-- Persistent item collection tracking
-- UI panel showing gathered memory fragments
-- Hidden story revealed over multiple runs
-
+- Built with [Godot Engine](https://godotengine.org/)  
+- Art assets from [itch.io](https://itch.io) *(free top-down pixel tilesets)*  
+- Sound effects and music from [freesound.org](https://freesound.org) *(licensed under Creative Commons)*  
+- All rights remain with original creators; this is a **non-commercial** project
 ---
 
 ## TODO
@@ -45,7 +41,7 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 - [x] Add end sequence once all memory items are collected
 - [ ] Audio feedback (ambience, item SFX, music)
 - [ ] Full memory log screen
-- [ ] Add timer of 5 minutes for each run and of you don't complete it you just 'die'
+- [ ] Implement 5-minute run timer (loop resets on failure)
 
 ---
 
@@ -60,7 +56,8 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 ## License
 
-This game is a student/personal project. Not for commercial use unless stated otherwise.
+This is a **personal/student project** and is **not for commercial use** unless otherwise stated.  
+Asset sources are credited above and remain the property of their original creators.
 
 ---
 
