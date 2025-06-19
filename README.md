@@ -33,6 +33,9 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 - [x] Add end sequence once all memory items are collected
 - [x] Audio feedback (ambience, item SFX, music)
+- [ ] Fix ItemDisplay stacking
+- [ ] Fix Endings Trigger counters
+- [ ] Add Conitional checks for interactions, certain dialogue only spanw if you meet the requiremennets for it
 - [ ] Full memory log screen
 
 ---
