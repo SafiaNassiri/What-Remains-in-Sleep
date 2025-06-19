@@ -8,7 +8,7 @@ atlas = ExtResource("1_cia4b")
 region = Rect2(80, 48, 16, 16)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_rq4lc"]
-radius = 29.0172
+radius = 23.0
 
 [node name="Item" type="Area2D" groups=["item"]]
 script = ExtResource("1_4jggt")

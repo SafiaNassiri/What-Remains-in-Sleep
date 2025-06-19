@@ -1,0 +1,102 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjino6nlrygip"]
+
+[ext_resource type="Script" path="res://scripts/StartMenu.gd" id="1_5vhx2"]
+
+[node name="StartMenu" type="Node2D"]
+script = ExtResource("1_5vhx2")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+custom_minimum_size = Vector2(288, 192)
+offset_right = 288.0
+offset_bottom = 192.0
+color = Color(0.117647, 0.117647, 0.117647, 1)
+
+[node name="ResetButton" type="Button" parent="."]
+offset_left = 203.0
+offset_top = 4.0
+offset_right = 284.0
+offset_bottom = 20.0
+theme_override_font_sizes/font_size = 6
+text = "Clear Save"
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+offset_left = 11.0
+offset_top = 11.0
+offset_right = 277.0
+offset_bottom = 181.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(266, 170)
+layout_mode = 2
+theme_override_constants/separation = 10
+alignment = 1
+
+[node name="Control2" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
+
+[node name="GameTitle" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 10
+text = "What Remains In Sleep"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Control" type="Control" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 1)
+layout_mode = 2
+
+[node name="Start" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(40, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Start"
+
+[node name="Controls" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(40, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Controls"
+
+[node name="Quit" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(40, 30)
+layout_mode = 2
+theme_override_font_sizes/font_size = 8
+text = "Quit"
+
+[node name="ControlsPanel" type="ColorRect" parent="CenterContainer"]
+visible = false
+layout_mode = 2
+color = Color(0.117647, 0.117647, 0.117647, 1)
+
+[node name="Label" type="Label" parent="CenterContainer/ControlsPanel"]
+layout_mode = 1
+offset_left = -132.0
+offset_top = -58.0
+offset_right = 134.0
+offset_bottom = 52.0
+theme_override_font_sizes/font_size = 8
+text = "Controls:
+
+
+- Move: WASD or Arrow Keys
+- Interact: E or Enter
+- Quit game: Esc"
+
+[node name="Back" type="Button" parent="CenterContainer/ControlsPanel"]
+custom_minimum_size = Vector2(40, 30)
+layout_mode = 0
+offset_left = 54.0
+offset_top = 60.0
+offset_right = 139.0
+offset_bottom = 90.0
+text = "<---"
+
+[node name="music_player" type="AudioStreamPlayer2D" parent="."]
+attenuation = 0.307786
+
+[connection signal="pressed" from="ResetButton" to="." method="_on_reset_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Controls" to="." method="_on_controls_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/Quit" to="." method="_on_quit_pressed"]
+[connection signal="pressed" from="CenterContainer/ControlsPanel/Back" to="." method="_on_back_pressed"]

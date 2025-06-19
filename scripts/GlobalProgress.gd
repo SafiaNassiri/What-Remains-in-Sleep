@@ -1,6 +1,10 @@
 # GlobalProgress.gd
 extends Node
 
+var unlocked_endings: Array[String] = []
+
+const SAVE_PATH = "user://endings.save"
+
 var last_ending_number := -1
 
 var total_neutral_items = 0
@@ -14,8 +18,7 @@ var interacted_neutral = 0
 var interacted_secret = 0
 
 func _ready():
-	# You can initialize or reset cumulative progress here if needed
-	pass
+	load_endings()
 
 func set_totals(neutral_items, secret_items, neutral_interactions, secret_interactions):
 	total_neutral_items = neutral_items
@@ -31,6 +34,7 @@ func set_totals(neutral_items, secret_items, neutral_interactions, secret_intera
 	print("==============================")
 
 func add_progress(collected_neutral, collected_secret, interacted_neutral_count, interacted_secret_count):
+	print("✅ add_progress() called")
 	collected_neutral_items += collected_neutral
 	collected_secret_items += collected_secret
 	interacted_neutral += interacted_neutral_count
@@ -72,3 +76,31 @@ func reset_progress():
 	print("Interacted Neutral: %d" % interacted_neutral)
 	print("Interacted Secret: %d" % interacted_secret)
 	print("============================")
+
+func add_unlocked_ending(ending: String) -> void:
+	if ending not in unlocked_endings:
+		unlocked_endings.append(ending)
+		save_endings()
+
+func save_endings():
+	var data = {
+		"unlocked_endings": unlocked_endings
+	}
+	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
+	if file:
+		file.store_var(data)
+		file.close()
+
+func load_endings():
+	if FileAccess.file_exists(SAVE_PATH):
+		var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+		if file:
+			var data = file.get_var()
+			unlocked_endings = data.get("unlocked_endings", [])
+			file.close()
+	else:
+		unlocked_endings = []
+
+func reset_endings():
+	unlocked_endings.clear()
+	save_endings()
