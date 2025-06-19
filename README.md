@@ -21,13 +21,6 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 ---
 
-## How To Play
-
-Download the zip file of the game.
-Unzi the folder and run the executable (currently only Windows is available).
-
----
-
 ## Development
 
 - Built with [Godot Engine](https://godotengine.org/)  
