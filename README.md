@@ -13,7 +13,7 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 ---
 
-##BatJam 2025
+## BatJam 2025
 
 What Remains in Sleep was created for BatJam, a small game jam hosted by friends.
 The jam ran from June 11 to June 19, 2025.
