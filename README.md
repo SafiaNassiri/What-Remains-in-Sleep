@@ -21,13 +21,6 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 ---
 
-## How To Play
-
-Download the zip file of the game.
-Unzi the folder and run the executable (currently only Windows is available).
-
----
-
 ## Development
 
 - Built with [Godot Engine](https://godotengine.org/)  
@@ -40,6 +33,10 @@ Unzi the folder and run the executable (currently only Windows is available).
 
 - [x] Add end sequence once all memory items are collected
 - [x] Audio feedback (ambience, item SFX, music)
+- [ ] Fix ItemDisplay stacking
+- [ ] Fix Endings Trigger counters
+- [ ] Fix file save
+- [ ] Add Conitional checks for interactions, certain dialogue only spanw if you meet the requiremennets for it
 - [ ] Full memory log screen
 
 ---

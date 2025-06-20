@@ -1,6 +1,6 @@
 [gd_scene load_steps=94 format=3 uid="uid://r3fcvtdbd1j6"]
 
-[ext_resource type="Script" path="res://scripts/player.gd" id="1_i42pj"]
+[ext_resource type="Script" path="res://scripts/Player.gd" id="1_i42pj"]
 [ext_resource type="Texture2D" uid="uid://w363dxlxcbbf" path="res://Sprites&TileMaps/Hana Caraka - Base Character [sample]/death.png" id="1_lvyeq"]
 [ext_resource type="Texture2D" uid="uid://cnro0124e5xvj" path="res://Sprites&TileMaps/Hana Caraka - Base Character [sample]/idle.png" id="1_m1ni3"]
 [ext_resource type="Texture2D" uid="uid://bm8pa3qk08w3j" path="res://Sprites&TileMaps/Hana Caraka - Base Character [sample]/hurt.png" id="2_ug2ic"]

@@ -24,7 +24,8 @@ var ending_order := {
 	"story_collector": 3,
 	"neutral_full": 4,
 	"all_items": 5,
-	"dumb": 6
+	"still_stuck": 6,
+	"dumb": 7
 }
 
 # --- Scene Setup ---
@@ -209,8 +210,11 @@ func get_ending() -> String:
 
 	# 🟥 Fallback ending: player missed key neutral stuff
 	if collected_neutral_items < total_neutral_items or \
-	   interacted_neutral < total_neutral_interactions:
-		return "dumb"
+	   interacted_neutral < total_neutral_interactions or \
+	   collected_secret_items < total_secret_items or \
+	   interacted_secret < total_secret_interactions:
+		return "still_stuck"
+
 	return "error"
 
 func trigger_ending(ending: String) -> void:
@@ -290,13 +294,11 @@ func trigger_ending(ending: String) -> void:
 			await ui.show_message(["A life forgotten by even its own dreamer."])
 			await ui.show_message(["You wake up to silence — and sleep again."])
 			
-	if ending not in GlobalProgress.unlocked_endings:
-		GlobalProgress.unlocked_endings.append(ending)
+	GlobalProgress.add_unlocked_ending(ending)
 	
 	var ending_number = ending_order.get(ending, -1)
-	get_tree().change_scene_to_file("res://scenes/Menus/GameOver.tscn")
-	# After changing scene, store the ending number somewhere
 	GlobalProgress.last_ending_number = ending_number 
+	get_tree().change_scene_to_file("res://scenes/Menus/GameOver.tscn")
 
 func _connect_lore_objects() -> void:
 	if not has_node("Interactables"):

@@ -3762,10 +3762,10 @@ anchor_left = 0.844
 anchor_top = 0.052
 anchor_right = 0.969
 anchor_bottom = 0.516
-offset_left = -0.0720062
-offset_top = 0.0159998
-offset_right = 3.92798
-offset_bottom = -9.07201
+offset_left = -0.071991
+offset_top = -6.984
+offset_right = 3.92801
+offset_bottom = 39.928
 grow_horizontal = 0
 theme_override_styles/panel = SubResource("StyleBoxFlat_cwiup")
 
@@ -3773,15 +3773,16 @@ theme_override_styles/panel = SubResource("StyleBoxFlat_cwiup")
 custom_minimum_size = Vector2(4, 4)
 layout_mode = 0
 offset_left = 4.0
-offset_top = 7.0
+offset_top = 4.0
 offset_right = 36.0
-offset_bottom = 75.0
+offset_bottom = 133.0
 
 [node name="ItemDisplay" type="GridContainer" parent="UI/Panel2/CenterContainer"]
-custom_minimum_size = Vector2(20, 20)
+custom_minimum_size = Vector2(20, 40)
 layout_mode = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
+columns = 2
 
 [node name="UISFXPlayer" type="AudioStreamPlayer2D" parent="UI"]
 volume_db = -10.0
@@ -3806,7 +3807,7 @@ lore_text = Array[String](["Stacks of books.", "Dusty.", "Untouched."])
 [node name="record" parent="Interactables/Run1" instance=ExtResource("14_tjx0c")]
 position = Vector2(406, 89)
 lore_id = "recordR1"
-lore_text = Array[String](["Oh! A record player. Wonder what I can pay on it.", "...", "The needle is broken. Bummer."])
+lore_text = Array[String](["Oh! A record player. Wonder what I can play on it.", "...", "The needle is broken. Bummer."])
 
 [node name="clock" parent="Interactables/Run1" instance=ExtResource("14_tjx0c")]
 position = Vector2(256, 85)
@@ -3898,7 +3899,7 @@ position = Vector2(258, 173)
 item_id = "OpenBookR1"
 item_name = "OpenBook"
 icon_texture = SubResource("AtlasTexture_48wat")
-lore_text = Array[String](["You were writing one,", "weren’t you?", "About a boy who love dthe moon so much...", "thet she perished from the sky."])
+lore_text = Array[String](["You were writing one,", "weren’t you?", "About a boy who loved the moon so much...", "then she perished from the sky."])
 
 [node name="Pie" parent="Interactables/Run1" instance=ExtResource("13_flvj8")]
 position = Vector2(903, 136)
@@ -3908,7 +3909,6 @@ icon_texture = SubResource("AtlasTexture_d5c3y")
 lore_text = Array[String](["You baked her a pie for her birthday.", "You joked you were bad at it.", "She laughed anyways."])
 
 [node name="Run2" type="Node2D" parent="Interactables"]
-visible = false
 
 [node name="Bookshelf" parent="Interactables/Run2" instance=ExtResource("14_tjx0c")]
 position = Vector2(104, 85)
@@ -3917,7 +3917,7 @@ lore_text = Array[String](["One title stirs something. ", "A night spent reading
 
 [node name="Bookcase" parent="Interactables/Run2" instance=ExtResource("14_tjx0c")]
 position = Vector2(192, 89)
-lore_id = "bookcaseR2"
+lore_id = "R2bookcase"
 lore_text = Array[String](["You remember arranging these.", "A rainy Sunday."])
 
 [node name="record" parent="Interactables/Run2" instance=ExtResource("14_tjx0c")]
@@ -3943,7 +3943,7 @@ lore_text = Array[String](["You hid something here once.", "A birthday card? ", 
 [node name="Full Hanger" parent="Interactables/Run2" instance=ExtResource("14_tjx0c")]
 position = Vector2(26, 89)
 lore_id = "Full HangerR2"
-lore_text = Array[String](["They smelled like lilac.", "You remember failtly of someone selling off lilacs."])
+lore_text = Array[String](["They smelled like lilac.", "You remember failtly of someone smelling off lilacs."])
 
 [node name="Empty Hanger" parent="Interactables/Run2" instance=ExtResource("14_tjx0c")]
 position = Vector2(772, 183)
@@ -3984,7 +3984,7 @@ lore_id = "Iron BoardR2"
 lore_text = Array[String](["You pressed a shirt for an interview.", "The day before it happened."])
 
 [node name="PaperNote" parent="Interactables/Run2" instance=ExtResource("13_flvj8")]
-position = Vector2(479, 60)
+position = Vector2(479, 63)
 item_id = "PaperNoteR2"
 item_name = "PaperNote"
 icon_texture = SubResource("AtlasTexture_8o1ns")
@@ -4003,7 +4003,7 @@ position = Vector2(97, 174)
 item_id = "Pet BallR2"
 item_name = "Pet Ball"
 icon_texture = SubResource("AtlasTexture_fjwnv")
-lore_text = Array[String](["You had  a dog.", "He loved her.", "Your dog ran to greet her every time you came home.", "Until she stopped coming."])
+lore_text = Array[String](["You had a dog.", "He loved her.", "Your dog ran to greet her every time you came home.", "Until she stopped coming."])
 
 [node name="FoodBowl" parent="Interactables/Run2" instance=ExtResource("13_flvj8")]
 position = Vector2(613, 175)
@@ -4020,7 +4020,7 @@ icon_texture = SubResource("AtlasTexture_ufrbu")
 lore_text = Array[String](["You never came."])
 
 [node name="Fishbowl" parent="Interactables/Run2" instance=ExtResource("13_flvj8")]
-position = Vector2(950, 154)
+position = Vector2(951, 156)
 item_id = "FishbowlR2"
 item_name = "Fishbowl"
 icon_texture = SubResource("AtlasTexture_eh3gv")
@@ -4036,15 +4036,10 @@ lore_id = "bookcaseR3"
 lore_text = Array[String](["These were your favorites.", "You read them out loud to someone...", "maybe her."])
 is_secret = true
 
-[node name="Bookcase" parent="Interactables/Run3" instance=ExtResource("14_tjx0c")]
-position = Vector2(104, 85)
-lore_id = "bookcaseR3"
-lore_text = Array[String](["You alphabetized these with your sibling.", "You argued about genres."])
-
 [node name="stairs" parent="Interactables/Run3" instance=ExtResource("14_tjx0c")]
 position = Vector2(323, 82)
 lore_id = "StairsR3"
-lore_text = Array[String](["You fell once.", "Or were pushed?", "No...", "you just fell.", "She threw your clothes down the stairs.", "...", "You've never seen her face so red."])
+lore_text = Array[String](["You fell once.", "Or were you pushed?", "No...", "you just fell.", "She threw your clothes down the stairs.", "...", "You've never seen her face so red."])
 is_secret = true
 
 [node name="PetBed" parent="Interactables/Run3" instance=ExtResource("14_tjx0c")]
@@ -4127,7 +4122,7 @@ position = Vector2(39, 60)
 item_id = "LandlineR3"
 item_name = "Landline"
 icon_texture = SubResource("AtlasTexture_4doew")
-lore_text = Array[String](["You debated calling afew days after the anger ebed away.", "You sat with the recieer in you hand.", "Fingers hoovering over the numbers, ", "itchin to press the sequence of digits you know by heart.", "You never went through with it though.", "Coward."])
+lore_text = Array[String](["You debated calling a few days after the anger softened.", "You sat with the receiver in you hand.", "Fingers hovering over the numbers, ", "itching to press the sequence of digits you know by heart.", "You never went through with it though.", "Coward."])
 is_secret = true
 
 [node name="Candle" parent="Interactables/Run3" instance=ExtResource("13_flvj8")]

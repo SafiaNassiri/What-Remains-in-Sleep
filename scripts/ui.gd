@@ -90,15 +90,10 @@ func add_item_to_display(texture: Texture2D) -> void:
 	var icon = TextureRect.new()
 	icon.texture = texture
 	icon.stretch_mode = TextureRect.STRETCH_KEEP
-	icon.size = texture.get_size()
+	icon.size = Vector2(8, 8)
 	item_display.add_child(icon)
 
 func fade_out_screen(duration := 1.0) -> void:
-	#var fade_sfx = load("res://Audio/sounds/choirfade.wav") as AudioStream
-	#if fade_sfx:
-	#	fade_sfx_player.stream = fade_sfx
-	#	fade_sfx_player.play()
-
 	fade_rect.color.a = 0.0
 	fade_rect.visible = true
 	var tween := create_tween()
@@ -106,11 +101,6 @@ func fade_out_screen(duration := 1.0) -> void:
 	await tween.finished
 
 func fade_in_screen(duration := 1.0) -> void:
-	#var fade_sfx = load("res://Audio/sounds/choirfadeR.wav") as AudioStream
-	#if fade_sfx:
-	#	fade_sfx_player.stream = fade_sfx
-	#	fade_sfx_player.play()
-
 	fade_rect.color.a = 1.0
 	fade_rect.visible = true
 	var tween := create_tween()
