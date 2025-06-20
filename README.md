@@ -13,6 +13,20 @@ In *What Remains in Sleep*, you play as a lost soul trapped in a shifting, loopi
 
 ---
 
+## How To Play
+
+You can download and play the game by following this link:
+[Download What Remains in Sleep](https://drive.google.com/drive/folders/1Gi1VZQ7Q8jfPUFPfr6egN77mgVf02cc4?usp=sharing)
+
+1. Download the `.zip` file containing the game.
+2. Extract the contents to your desired folder.
+3. Run the executable file (e.g., `WhatRemainsInSleep.exe`) to start the game.
+4. Enjoy!
+
+> ⚠️ **Note:** If you get a warning from Windows or your antivirus, you may need to allow the game through your system’s protection — this is an unsigned student project.
+
+---
+
 ## Controls
 
 - **WASD / Arrow Keys** – Move
